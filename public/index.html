@@ -105,69 +105,84 @@
     <script>
         const ADM_TOKEN = "HACKII@786";
 
-        function loadSystemDB() {
-            let db = localStorage.getItem('HACKII_GLOBAL_STORE');
-            if(!db) {
-                db = {
-                    "APPROVED_UID_REGISTRY": { "9999": "APPROVED", "8888": "APPROVED" },
-                    "PENDING_REQUESTS": [],
-                    "BANNED_REGISTRY": {}
-                };
-                localStorage.setItem('HACKII_GLOBAL_STORE', JSON.stringify(db));
-            }
-            return JSON.parse(localStorage.getItem('HACKII_GLOBAL_STORE'));
-        }
-        
-        function saveSystemDB(data) {
-            localStorage.setItem('HACKII_GLOBAL_STORE', JSON.stringify(data));
-        }
+async function executeSecureLogin() {
+const input = document.getElementById('node-uid-input');
+const val = input ? input.value.trim().toUpperCase() : "";
 
-        function executeSecureLogin() {
-            const input = document.getElementById('node-uid-input');
-            const val = input ? input.value.trim().toUpperCase() : "";
+if (!val) {  
+    displayToast("⚠️ FIELD VALUE PARAMETER EMPTY!");  
+    return;  
+}  
 
-            if(!val) { displayToast("⚠️ FIELD VALUE PARAMETER EMPTY!"); return; }
+// Admin override check  
+if (val === ADM_TOKEN) {  
+    displayToast("🔑 ROOT LEVEL HANDSHAKE SUCCESS... ACCESSED.");  
+    sessionStorage.setItem('ADM_AUTH_SESSION', 'ACTIVE');  
+    setTimeout(() => {  
+        window.location.href = "admin.html";  
+    }, 800);  
+    return;  
+}  
 
-            if(val === ADM_TOKEN) {
-                displayToast("🔑 ROOT LEVEL HANDSHAKE SUCCESS... ACCESSED.");
-                sessionStorage.setItem('ADM_AUTH_SESSION', 'ACTIVE');
-                setTimeout(() => { window.location.href = "admin.html"; }, 800);
-                return;
-            }
+// Server-side verification  
+try {  
+    displayToast("⏳ VERIFYING ON SERVER...");  
+      
+    const response = await fetch('/api/auth/verify', {  
+        method: 'POST',  
+        headers: {  
+            'Content-Type': 'application/json'  
+        },  
+        body: JSON.stringify({ uid: val })  
+    });  
 
-            let db = loadSystemDB();
+    const data = await response.json();  
 
-            if (db.BANNED_REGISTRY[val]) {
-                displayToast("❌ DENIED: Hardware node blacklisted.");
-                return;
-            }
-            
-            if (db.APPROVED_UID_REGISTRY[val]) {
-                displayToast("✅ HARDWARE TOKEN VERIFIED! INJECTING...");
-                localStorage.setItem('USER_VALID_SESSION_UID', val);
-                setTimeout(() => { window.location.href = "dashboard.html"; }, 800);
-                return;
-            }
+    if (data.status === "APPROVED") {  
+        displayToast("✅ HARDWARE TOKEN VERIFIED!");  
+        localStorage.setItem('USER_VALID_SESSION_UID', val);  
+        setTimeout(() => {  
+            window.location.href = "dashboard.html";  
+        }, 800);  
+    } else if (data.status === "NO_RECHARGE") {  
+        displayToast("🟢 RECHARGE NOT FOUND | PLEASE RECHARGE YOUR GAME ID");  
+    } else if (data.status === "REJECTED") {  
+        displayToast("❌ ACCESS DENIED");  
+    } else {  
+        // Updated message  
+        displayToast("🔴 ID NOT VERIFIED | PLEASE VERIFY YOUR ID FROM HACKII");  
+    }  
 
-            if (!db.PENDING_REQUESTS.includes(val)) {
-                db.PENDING_REQUESTS.push(val);
-                saveSystemDB(db);
-            }
-            displayToast("⏳ APPLIED KEY LOGGED! WAIT FOR ADMIN APPROVAL.");
-        }
+} catch (err) {  
+    console.error("Auth Error:", err);  
+    displayToast("⚠️ SERVER CONNECTION ERROR");  
+}
 
-        let tOut;
-        function displayToast(msg) {
-            const box = document.getElementById('toast-layer');
-            const txt = document.getElementById('toast-msg');
-            if(!box || !txt) return;
-            txt.innerText = msg;
-            box.classList.add('active');
-            clearTimeout(tOut);
-            tOut = setTimeout(() => box.classList.remove('active'), 3000);
-        }
+}
 
-        window.onload = loadSystemDB;
+function displayToast(msg) {
+const box = document.getElementById('toast-layer');
+const txt = document.getElementById('toast-msg');
+if(!box || !txt) return;
+txt.innerText = msg;
+box.classList.add('active');
+
+// Auto hide toast after 3 seconds  
+clearTimeout(window.tOut);  
+window.tOut = setTimeout(() => box.classList.remove('active'), 3000);
+
+}
+
+// Enter key event listener with null-check
+const uidInput = document.getElementById('node-uid-input');
+
+if (uidInput) {
+uidInput.addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+executeSecureLogin();
+}
+});
+}
     </script>
 </body>
 </html>
