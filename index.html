@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ HACKII SYNCHRONIZED ENGINE v6.0</title>
+    <title>⚡ HACKII TRUE DUAL STREAM v7.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
@@ -17,7 +17,7 @@
         .font-digital {
             font-family: 'Orbitron', sans-serif;
         }
-        /* HACKII Ultimate Multi-Color Glow Effect */
+        /* HACKII Dynamic Rainbow Glow */
         .hackii-glow {
             background: linear-gradient(45deg, #ff0055, #00ffcc, #9900ff, #ff0055);
             background-size: 200% auto;
@@ -52,7 +52,7 @@
             <h1 class="text-4xl font-black tracking-tighter hackii-glow font-digital">
                 HACKII
             </h1>
-            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Stream // Mono Sync Analyzer</p>
+            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Block // Range Analyzer</p>
         </div>
         
         <div class="glass-card px-3 py-1 rounded-xl border border-slate-800">
@@ -83,7 +83,7 @@
         </div>
 
         <div class="glass-card p-6 rounded-3xl flex flex-col justify-between relative overflow-hidden border border-slate-800 neon-box">
-            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-5">ALIGNED MONO MATRIX</span>
+            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-5">ALIGNED PURE MATRIX</span>
 
             <div class="grid grid-cols-2 gap-4 justify-center px-4">
                 
@@ -101,7 +101,7 @@
 
             <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-4 mt-6">
                 <span id="sync-status" class="text-emerald-400 flex items-center gap-1">
-                    <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Live Mono Synchronized State
+                    <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Live Unified Logic State
                 </span>
                 <span id="last-update">Secured</span>
             </div>
@@ -121,7 +121,7 @@
     </footer>
 
     <script>
-        const LOOP_SECONDS = 60; // Pure 1-Minute Sync Loop
+        const LOOP_SECONDS = 60; // Strict 1-Minute Sync Loop
         let activeBlockIndex = -1;
 
         // 1. CLOCK SYNCHRONIZATION RUNNER
@@ -135,35 +135,50 @@
         }
         setInterval(triggerClockPipeline, 1000);
 
-        // 2. MATHEMATICAL 1-MINUTE TIME BLOCK CALCULATIONS (REFRESH SAFE & MONO-SYNC)
-        function extractDynamicMetrics() {
+        // 2. MATHEMATICAL 1-MINUTE RANGE BLOCK CALCULATIONS (TRUE BLOCK DUAL MODE)
+        function extractDynamicMetrics(blockOffset = 0) {
             const now = new Date();
             
-            // Daily System Reset Baseline Frame: 5:30 AM Today
             let baseReset = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
-            if (now < baseReset) {
-                baseReset.setDate(baseReset.getDate() - 1);
-            }
+            if (now < baseReset) { baseReset.setDate(baseReset.getDate() - 1); }
 
             const deltaSeconds = Math.floor((now - baseReset) / 1000);
-            const activeBlockId = Math.floor(deltaSeconds / LOOP_SECONDS);
+            // Offset logic for history reconstruction
+            const targetBlockId = Math.floor(deltaSeconds / LOOP_SECONDS) - blockOffset;
             const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
 
-            // Compute exactly ONE stable single digit for the entire page to synchronize everything
-            const combinedSeed = (activeBlockId + 1) * 137 + baseReset.getDate() * 241;
-            const trigValue = Math.abs(Math.sin(combinedSeed) * 9000) % 10;
-            const synchronizedSingleDigit = Math.floor(trigValue);
+            // STEP 1: Pura 1-minute ka block SMALL hoga ya BIG, yeh mathematical seed decide karega (0 = SMALL, 1 = BIG)
+            const masterSeed = (targetBlockId + 1) * 357 + baseReset.getDate() * 149;
+            const masterDecision = Math.floor(Math.abs(Math.sin(masterSeed) * 1000)) % 2; 
+
+            // STEP 2: Us single block range ke andar do alag-alag digits nikalna (0-4 or 5-9)
+            const digits = [];
+            for (let i = 1; i <= 2; i++) {
+                // Har digit ke liye alag variable calculation multiplier lagaya hai
+                const subSeed = (targetBlockId + 1) * (i * 127) + baseReset.getDate() * 563;
+                const rawVal = Math.floor(Math.abs(Math.cos(subSeed) * 7000)) % 5; // Hamesha 0 se 4 nikalega
+                
+                if (masterDecision === 1) {
+                    // Agar BIG block hai -> Shift range to 5-9
+                    digits.push(rawVal + 5); 
+                } else {
+                    // Agar SMALL block hai -> Keep range 0-4
+                    digits.push(rawVal);
+                }
+            }
 
             return {
-                blockID: activeBlockId + 1,
+                blockID: targetBlockId + 1,
                 countdown: countdownRemaining,
-                singleDigit: synchronizedSingleDigit
+                digit1: digits[0],
+                digit2: digits[1],
+                isBig: masterDecision === 1
             };
         }
 
         // 3. PIPELINE REFRESH MATCHING MACHINE
         function processTimeCoreEngine() {
-            const data = extractDynamicMetrics();
+            const data = extractDynamicMetrics(0);
             
             const s = String(data.countdown % 60).padStart(2, '0');
             const countDisplay = document.getElementById('countdown');
@@ -178,26 +193,19 @@
             }
 
             if (activeBlockIndex !== data.blockID) {
-                executeEngineDraw(data.singleDigit, data.blockID);
+                executeEngineDraw(data);
                 activeBlockIndex = data.blockID;
             }
         }
 
-        // 4. MATRIX SHUFFLE & BIG/SMALL CHARACTER ANALYZER (TWIN LOCKED)
-        function executeEngineDraw(finalValue, seqId) {
+        // 4. MATRIX SHUFFLE & RANGE ASSIGNER
+        function executeEngineDraw(dataObj) {
             const statusNode = document.getElementById('sync-status');
-            statusNode.innerHTML = `⏳ Synchronizing Twin Streams...`;
+            statusNode.innerHTML = `⏳ Synchronizing Range Matrix...`;
             statusNode.className = "text-amber-400 font-mono";
 
-            const cells = [
-                document.getElementById('digit-1'),
-                document.getElementById('digit-2')
-            ];
-
-            const tags = [
-                document.getElementById('tag-1'),
-                document.getElementById('tag-2')
-            ];
+            const cells = [document.getElementById('digit-1'), document.getElementById('digit-2')];
+            const tags = [document.getElementById('tag-1'), document.getElementById('tag-2')];
 
             cells.forEach(c => c.className = "w-full font-digital text-7xl font-black text-center text-slate-700 bg-slate-950/90 rounded-2xl py-5 border border-slate-900");
             tags.forEach(t => {
@@ -207,21 +215,23 @@
 
             let iterations = 0;
             const scrollInterval = setInterval(() => {
-                // Dono boxes ek sath live random generate karenge roll state me
                 cells.forEach(c => c.innerText = Math.floor(Math.random() * 10));
                 iterations++;
 
                 if (iterations > 12) {
                     clearInterval(scrollInterval);
 
-                    // Dono boxes me strictly wahi exact SAME logic apply hogi ek sath
-                    cells.forEach((cell) => {
-                        cell.innerText = finalValue;
+                    // Output mathematically range-locked values
+                    cells[0].innerText = dataObj.digit1;
+                    cells[1].innerText = dataObj.digit2;
+
+                    cells.forEach(cell => {
                         cell.className = "w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
                     });
                     
-                    tags.forEach((tag) => {
-                        if (finalValue >= 5) {
+                    // Dono cards ka tag hamesha exact same block logic ko dikhayega
+                    tags.forEach(tag => {
+                        if (dataObj.isBig) {
                             tag.innerText = "BIG";
                             tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 text-shadow-[0_0_10px_rgba(244,63,94,0.3)] w-full text-center";
                         } else {
@@ -233,22 +243,22 @@
                     const exactTime = new Date().toLocaleTimeString();
                     document.getElementById('last-update').innerText = `Synced: ${exactTime}`;
                     
-                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Mono Synced`;
+                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Range Matched`;
                     statusNode.className = "text-emerald-400 flex items-center gap-1";
 
-                    compileHistoryLog(finalValue, exactTime);
+                    compileHistoryLog(dataObj, exactTime);
                 }
             }, 40);
         }
 
-        // 5. DATA HISTORY LOG COMPILER (SINGLE LOG INDEX)
-        function compileHistoryLog(singleVal, timestamp) {
+        // 5. DATA HISTORY LOG COMPILER
+        function compileHistoryLog(dataObj, timestamp) {
             const container = document.getElementById('history-box');
             const row = document.createElement('div');
 
-            const tagString = singleVal >= 5 ? 
-                `<span class="text-[10px] font-bold text-pink-400 px-2 bg-pink-950/20 rounded border border-pink-900/30">BIG</span>` : 
-                `<span class="text-[10px] font-bold text-cyan-400 px-2 bg-cyan-950/20 rounded border border-cyan-900/30">SMALL</span>`;
+            const tagString = dataObj.isBig ? 
+                `<span class="text-[10px] font-bold text-pink-400 px-2 bg-pink-950/20 rounded border border-pink-900/30">BIG BLOCK</span>` : 
+                `<span class="text-[10px] font-bold text-cyan-400 px-2 bg-cyan-950/20 rounded border border-cyan-900/30">SMALL BLOCK</span>`;
 
             row.className = "flex justify-between items-center bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-900/80";
             row.innerHTML = `
@@ -256,7 +266,7 @@
                     <span class="text-[10px] text-slate-500 font-mono">${timestamp}</span>
                     <div>${tagString}</div>
                 </div>
-                <span class="font-digital font-black text-base text-emerald-400 tracking-widest">${singleVal} ${singleVal}</span>
+                <span class="font-digital font-black text-base text-emerald-400 tracking-[0.4em]">${dataObj.digit1}${dataObj.digit2}</span>
             `;
 
             container.insertBefore(row, container.firstChild);
@@ -304,25 +314,20 @@
             requestAnimationFrame(loopAnimation);
         }
 
-        // CORE ENGINE KICKSTART
+        // CORE ENGINE KICKSTART ENTRYPOINT
         window.onload = function() {
             createEngineDust();
             loopAnimation();
             triggerClockPipeline();
 
-            // Historical structural items pre-render on direct refresh
-            const initMetrics = extractDynamicMetrics();
-            let baseID = initMetrics.blockID;
+            // Direct refresh par dynamic history blocks build karna mathematically 
             for (let x = 1; x <= 3; x++) {
-                let checkBlock = baseID - x;
-                if (checkBlock > 0) {
-                    const pastSeed = checkBlock * 137 + new Date().getDate() * 241;
-                    const pastVal = Math.floor(Math.abs(Math.sin(pastSeed) * 9000) % 10);
-                    compileHistoryLog(pastVal, `Block -${x}m`);
+                const pastData = extractDynamicMetrics(x);
+                if (pastData.blockID > 0) {
+                    compileHistoryLog(pastData, `Past -${x}m`);
                 }
             }
         };
     </script>
 </body>
 </html>
-
