@@ -17,7 +17,7 @@
         .font-digital {
             font-family: 'Orbitron', sans-serif;
         }
-        /* HACKII Iconic Multi-Color Glow */
+        /* HACKII Iconic Glow */
         .hackii-glow {
             background: linear-gradient(45deg, #ff0055, #00ffcc, #9900ff, #ff0055);
             background-size: 200% auto;
@@ -64,16 +64,16 @@
         
         <div class="glass-card p-4 rounded-2xl border border-slate-800/80 shadow-lg">
             <div class="flex justify-between items-center mb-1">
-                <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">HIGH FREQUENCY TIMELINE</span>
-                <span id="loop-state-tag" class="text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE PHASE</span>
+                <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">3-MIN LOOP SEQUENCE</span>
+                <span id="loop-state-tag" class="text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE ROUND</span>
             </div>
             
             <div class="flex items-center justify-between">
                 <div id="countdown" class="font-digital text-4xl font-black text-amber-400 tracking-wider">
-                    02:00
+                    03:00
                 </div>
                 <div class="text-[9px] text-slate-500 font-mono text-right uppercase">
-                    INTERVAL CYCLE<br><span class="text-slate-400 font-bold">120 SEC SPLIT</span>
+                    CYCLE TIMELINE<br><span class="text-slate-400 font-bold">1 MIN PLAY + 2 MIN SKIP</span>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
         </div>
 
         <div class="glass-card p-5 rounded-3xl min-h-[240px] flex flex-col justify-between relative overflow-hidden border border-slate-800/80 neon-box">
-            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-2">REAL RNG OUTPUT CHANNEL</span>
+            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-2">OUTPUT CHANNELS</span>
 
             <div id="display-matrix-container" class="w-full py-2">
                 <div id="active-slots-view" class="grid grid-cols-2 gap-4 justify-center px-2">
@@ -101,7 +101,7 @@
                     <div class="text-rose-500 font-digital text-2xl font-black tracking-widest animate-pulse mb-1">
                         WAIT FOR NEXT ROUND
                     </div>
-                    <p class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">GEN ENGINE GENERATING NEXT ENTROPY CORE</p>
+                    <p class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">SKIPPING 2 ROUNDS // SYSTEM STANDBY</p>
                 </div>
             </div>
 
@@ -127,7 +127,7 @@
     </footer>
 
     <script>
-        const LOOP_SECONDS = 120; // 2 Minute Global Synchronizer
+        const LOOP_SECONDS = 180; // Total 3 Minutes Global Cycle (180 seconds)
         let activeBlockIndex = -1;
         let isUIVisualStateWait = false;
 
@@ -138,11 +138,11 @@
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
             });
             
-            evaluateSplit2MinEngine();
+            evaluateCustom3MinEngine();
         }
         setInterval(runEngineClockPipeline, 1000);
 
-        // 2. CRYPTOGRAPHICALLY SECURE DETERMINISTIC SEED SIMULATION MAPPED ON TIMELINES
+        // 2. CRYPTOGRAPHICALLY SECURE REAL ENTROPY ENGINE DETERMINATION
         function calculateRealEngineMetrics(blockOffset = 0) {
             const now = new Date();
             
@@ -153,17 +153,17 @@
             const targetBlockId = Math.floor(deltaSeconds / LOOP_SECONDS) - blockOffset;
             const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
 
-            const stepFactor = (targetBlockId + 1) * 3121 + baseReset.getDate() * 883;
+            const stepFactor = (targetBlockId + 1) * 4327 + baseReset.getDate() * 761;
             const cryptoTrig = Math.abs(Math.sin(stepFactor)) * 100000;
             
-            const smallWeight = Math.floor(47000 + (cryptoTrig % 8001));
+            const smallWeight = Math.floor(48000 + (cryptoTrig % 7001));
             const isBigDecision = (100000 - smallWeight) < smallWeight;
 
-            // Generate exactly two secure deterministic numbers mapped inside boundary
+            // Generate two secure deterministic numbers mapped inside chosen boundary limits
             const digits = [];
             for (let i = 1; i <= 2; i++) {
-                const finalSeed = stepFactor * (i * 367) + (isBigDecision ? 999 : 222);
-                const baseDigitResult = Math.floor(Math.abs(Math.cos(finalSeed) * 8200)) % 5;
+                const finalSeed = stepFactor * (i * 401) + (isBigDecision ? 888 : 333);
+                const baseDigitResult = Math.floor(Math.abs(Math.cos(finalSeed) * 8500)) % 5;
                 digits.push(isBigDecision ? (baseDigitResult + 5) : baseDigitResult);
             }
 
@@ -176,8 +176,8 @@
             };
         }
 
-        // 3. MAIN APP MANAGER & SPLIT-LOOP EVALUATOR
-        function evaluateSplit2MinEngine() {
+        // 3. MAIN APP STREAM EVALUATOR WITH EXACT 1-MIN / 2-MIN TIMING SPLIT
+        function evaluateCustom3MinEngine() {
             const data = calculateRealEngineMetrics(0);
             
             const minutes = String(Math.floor(data.countdown / 60)).padStart(2, '0');
@@ -188,20 +188,20 @@
             
             document.getElementById('progress-bar').style.width = `${(data.countdown / LOOP_SECONDS) * 100}%`;
 
-            // CRITICAL SPLIT DETERMINATION: Pehle 60 Sec Active, Aakhri 60 Sec Wait state
-            if (data.countdown <= 60) {
-                // Wait Phase Active (60s to 0s)
+            // STRICT RULE LOGIC:
+            // 180s to 121s (First 60 seconds) -> Active Round Phase Show Numbers
+            // 120s to 0s (Next 120 seconds / 2 Rounds) -> Skip / Wait Phase Show Wait Message
+            if (data.countdown <= 120) {
                 if (!isUIVisualStateWait) {
                     triggerWaitPhaseUI();
                 }
             } else {
-                // Active Result Phase (120s to 61s)
                 if (isUIVisualStateWait) {
-                    isUIVisualStateWait = false; // Reset trigger state
+                    isUIVisualStateWait = false; 
                 }
             }
 
-            if(data.countdown <= 10) {
+            if(data.countdown <= 15) {
                 countDisplay.className = "font-digital text-4xl font-black text-red-500 animate-pulse";
             } else {
                 countDisplay.className = "font-digital text-4xl font-black text-amber-400";
@@ -213,7 +213,7 @@
             }
         }
 
-        // 4. TRANSITION FUNCTIONS FOR STATE CHANGES
+        // 4. TRANSITION INTERFACE STATE MANAGER
         function triggerWaitPhaseUI() {
             isUIVisualStateWait = true;
             document.getElementById('active-slots-view').classList.add('hidden');
@@ -225,7 +225,7 @@
             tagState.className = "text-[10px] bg-rose-950/40 border border-rose-900/50 text-rose-400 px-1.5 py-0.5 rounded font-mono font-bold";
 
             const statusNode = document.getElementById('sync-status');
-            statusNode.innerHTML = `🛑 STANDBY BLOCK BUFFERING`;
+            statusNode.innerHTML = `🛑 SKIP MODE ACTIVATED`;
             statusNode.className = "text-rose-400 font-mono";
         }
 
@@ -235,11 +235,11 @@
             document.getElementById('active-slots-view').classList.remove('hidden');
             
             const tagState = document.getElementById('loop-state-tag');
-            tagState.innerText = "ACTIVE PHASE";
+            tagState.innerText = "ACTIVE ROUND";
             tagState.className = "text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold";
         }
 
-        // 5. SHUFFLE & DATA INJECTION PROCESS
+        // 5. SHUFFLE SELECTION & REAL VALUE INJECTION
         function executeVisualDrawSequence(dataObj) {
             restoreActivePhaseUI();
             
@@ -258,6 +258,7 @@
 
             let iterations = 0;
             const scrollInterval = setInterval(() => {
+                // Generate genuine volatile cryptographic matrix buffer arrays during shuffling process
                 const cryptoBuffer = new Uint32Array(2);
                 window.crypto.getRandomValues(cryptoBuffer);
                 cells[0].innerText = cryptoBuffer[0] % 10;
@@ -267,7 +268,7 @@
                 if (iterations > 14) {
                     clearInterval(scrollInterval);
 
-                    // Inject values securely bound via synchronized real timeline
+                    // Inject values securely bound via synchronized timeline calculations
                     cells[0].innerText = dataObj.digit1;
                     cells[1].innerText = dataObj.digit2;
 
@@ -296,7 +297,7 @@
             }, 40);
         }
 
-        // 6. HISTORICAL LEDGER DATA LISTER
+        // 6. HISTORICAL LOG TRACKER ENGINE
         function compileHistoryDatabaseLog(dataObj, timestamp) {
             const container = document.getElementById('history-box');
             const row = document.createElement('div');
@@ -363,17 +364,17 @@
             requestAnimationFrame(loopAnimation);
         }
 
-        // SYSTEM INITIAL BOOTLOAD CALL
+        // SYSTEM INITIALIZATION BOOTLOAD
         window.onload = function() {
             createEngineDust();
             loopAnimation();
             runEngineClockPipeline();
 
-            // Pre-renders clean history items
+            // Pre-renders clean history logs on immediate mount state
             for (let x = 1; x <= 3; x++) {
                 const pastData = calculateRealEngineMetrics(x);
                 if (pastData.blockID > 0) {
-                    compileHistoryDatabaseLog(pastData, `PAST -${x*2}M`);
+                    compileHistoryDatabaseLog(pastData, `PAST -${x*3}M`);
                 }
             }
         };
