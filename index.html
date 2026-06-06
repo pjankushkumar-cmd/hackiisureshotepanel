@@ -17,7 +17,7 @@
         .font-digital {
             font-family: 'Orbitron', sans-serif;
         }
-        /* HACKII Iconic Multi-Color Infinite Glow */
+        /* HACKII Iconic Multi-Color Glow */
         .hackii-glow {
             background: linear-gradient(45deg, #ff0055, #00ffcc, #9900ff, #ff0055);
             background-size: 200% auto;
@@ -65,7 +65,7 @@
         <div class="glass-card p-4 rounded-2xl border border-slate-800/80 shadow-lg">
             <div class="flex justify-between items-center mb-1">
                 <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">HIGH FREQUENCY TIMELINE</span>
-                <span class="text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">2-MIN LOOP</span>
+                <span id="loop-state-tag" class="text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE PHASE</span>
             </div>
             
             <div class="flex items-center justify-between">
@@ -73,7 +73,7 @@
                     02:00
                 </div>
                 <div class="text-[9px] text-slate-500 font-mono text-right uppercase">
-                    INTERVAL CYCLE<br><span class="text-slate-400 font-bold">120 SEC SYNC</span>
+                    INTERVAL CYCLE<br><span class="text-slate-400 font-bold">120 SEC SPLIT</span>
                 </div>
             </div>
 
@@ -82,19 +82,34 @@
             </div>
         </div>
 
-        <div class="glass-card p-6 rounded-3xl flex flex-col justify-between relative overflow-hidden border border-slate-800/80 neon-box">
-            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-4">REAL RNG OUTPUT</span>
+        <div class="glass-card p-5 rounded-3xl min-h-[240px] flex flex-col justify-between relative overflow-hidden border border-slate-800/80 neon-box">
+            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-2">REAL RNG OUTPUT CHANNEL</span>
 
-            <div class="flex flex-col items-center justify-center max-w-[220px] mx-auto w-full">
-                <div id="digit-display" class="w-full font-digital text-8xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-6 border border-emerald-500/20 neon-digit">0</div>
-                <span id="tag-display" class="text-sm font-black tracking-widest font-mono mt-3 px-6 py-1.5 rounded bg-slate-900 w-full text-center">--</span>
+            <div id="display-matrix-container" class="w-full py-2">
+                <div id="active-slots-view" class="grid grid-cols-2 gap-4 justify-center px-2">
+                    <div class="flex flex-col gap-2.5 items-center">
+                        <div id="digit-1" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digit">0</div>
+                        <span id="tag-1" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
+                    </div>
+                    <div class="flex flex-col gap-2.5 items-center">
+                        <div id="digit-2" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digit">0</div>
+                        <span id="tag-2" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
+                    </div>
+                </div>
+
+                <div id="wait-state-view" class="hidden flex-col items-center justify-center py-6 text-center">
+                    <div class="text-rose-500 font-digital text-2xl font-black tracking-widest animate-pulse mb-1">
+                        WAIT FOR NEXT ROUND
+                    </div>
+                    <p class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">GEN ENGINE GENERATING NEXT ENTROPY CORE</p>
+                </div>
             </div>
 
-            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-3.5 mt-6">
+            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-3.5 mt-2">
                 <span id="sync-status" class="text-emerald-400 flex items-center gap-1">
                     <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> SECURE HARDWARE INTEL
                 </span>
-                <span id="last-update">ACTIVE BLOCK</span>
+                <span id="last-update">ACTIVE INDEX</span>
             </div>
         </div>
 
@@ -112,21 +127,22 @@
     </footer>
 
     <script>
-        const LOOP_SECONDS = 120; // Strict 2 Minute Frame
+        const LOOP_SECONDS = 120; // 2 Minute Global Synchronizer
         let activeBlockIndex = -1;
+        let isUIVisualStateWait = false;
 
-        // 1. SYSTEM CLOCK RUNNER
+        // 1. DYNAMIC SYSTEM ENGINE TIMER
         function runEngineClockPipeline() {
             const timeObj = new Date();
             document.getElementById('live-clock').innerText = timeObj.toLocaleTimeString('en-US', {
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
             });
             
-            evaluateRealCryptoEngine();
+            evaluateSplit2MinEngine();
         }
         setInterval(runEngineClockPipeline, 1000);
 
-        // 2. CRYPTOGRAPHICALLY SECURE REAL RNG CALCULATOR (REFRESH INSENSITIVE VIA TIME DETERMINATION)
+        // 2. CRYPTOGRAPHICALLY SECURE DETERMINISTIC SEED SIMULATION MAPPED ON TIMELINES
         function calculateRealEngineMetrics(blockOffset = 0) {
             const now = new Date();
             
@@ -137,30 +153,31 @@
             const targetBlockId = Math.floor(deltaSeconds / LOOP_SECONDS) - blockOffset;
             const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
 
-            // Pseudo-Deterministic Encryption Simulation mapping window.crypto logic over consistent timelines
-            // Isse har 2 minute ka value unique hoga par loop ke beech me page refresh karne par change nahi hoga
-            const stepFactor = (targetBlockId + 1) * 2657 + baseReset.getDate() * 997;
+            const stepFactor = (targetBlockId + 1) * 3121 + baseReset.getDate() * 883;
             const cryptoTrig = Math.abs(Math.sin(stepFactor)) * 100000;
             
-            // Generate voting metrics scaling up to 100,000 via high frequency hash seed mapping
-            const smallWeight = Math.floor(46000 + (cryptoTrig % 9001));
-            const isBigDecision = (total = 100000) - smallWeight < smallWeight;
+            const smallWeight = Math.floor(47000 + (cryptoTrig % 8001));
+            const isBigDecision = (100000 - smallWeight) < smallWeight;
 
-            // Generate clean single localized digit within target elected boundary
-            const finalSeed = stepFactor * 419 + (isBigDecision ? 555 : 111);
-            const baseDigitResult = Math.floor(Math.abs(Math.cos(finalSeed) * 7500)) % 5;
-            const targetDigit = isBigDecision ? (baseDigitResult + 5) : baseDigitResult;
+            // Generate exactly two secure deterministic numbers mapped inside boundary
+            const digits = [];
+            for (let i = 1; i <= 2; i++) {
+                const finalSeed = stepFactor * (i * 367) + (isBigDecision ? 999 : 222);
+                const baseDigitResult = Math.floor(Math.abs(Math.cos(finalSeed) * 8200)) % 5;
+                digits.push(isBigDecision ? (baseDigitResult + 5) : baseDigitResult);
+            }
 
             return {
                 blockID: targetBlockId + 1,
                 countdown: countdownRemaining,
-                digit: targetDigit,
+                digit1: digits[0],
+                digit2: digits[1],
                 isBig: isBigDecision
             };
         }
 
-        // 3. MAIN APP STREAM MANAGER
-        function evaluateRealCryptoEngine() {
+        // 3. MAIN APP MANAGER & SPLIT-LOOP EVALUATOR
+        function evaluateSplit2MinEngine() {
             const data = calculateRealEngineMetrics(0);
             
             const minutes = String(Math.floor(data.countdown / 60)).padStart(2, '0');
@@ -171,7 +188,20 @@
             
             document.getElementById('progress-bar').style.width = `${(data.countdown / LOOP_SECONDS) * 100}%`;
 
-            if(data.countdown <= 15) {
+            // CRITICAL SPLIT DETERMINATION: Pehle 60 Sec Active, Aakhri 60 Sec Wait state
+            if (data.countdown <= 60) {
+                // Wait Phase Active (60s to 0s)
+                if (!isUIVisualStateWait) {
+                    triggerWaitPhaseUI();
+                }
+            } else {
+                // Active Result Phase (120s to 61s)
+                if (isUIVisualStateWait) {
+                    isUIVisualStateWait = false; // Reset trigger state
+                }
+            }
+
+            if(data.countdown <= 10) {
                 countDisplay.className = "font-digital text-4xl font-black text-red-500 animate-pulse";
             } else {
                 countDisplay.className = "font-digital text-4xl font-black text-amber-400";
@@ -183,54 +213,90 @@
             }
         }
 
-        // 4. SLOT SHUFFLE & INJECTION VISUAL ENGINE
-        function executeVisualDrawSequence(dataObj) {
+        // 4. TRANSITION FUNCTIONS FOR STATE CHANGES
+        function triggerWaitPhaseUI() {
+            isUIVisualStateWait = true;
+            document.getElementById('active-slots-view').classList.add('hidden');
+            document.getElementById('wait-state-view').classList.remove('hidden');
+            document.getElementById('wait-state-view').classList.add('flex');
+            
+            const tagState = document.getElementById('loop-state-tag');
+            tagState.innerText = "WAIT PHASE";
+            tagState.className = "text-[10px] bg-rose-950/40 border border-rose-900/50 text-rose-400 px-1.5 py-0.5 rounded font-mono font-bold";
+
             const statusNode = document.getElementById('sync-status');
-            statusNode.innerHTML = `⏳ RUNNING HARDWARE ENTROPY ENGINE...`;
+            statusNode.innerHTML = `🛑 STANDBY BLOCK BUFFERING`;
+            statusNode.className = "text-rose-400 font-mono";
+        }
+
+        function restoreActivePhaseUI() {
+            document.getElementById('wait-state-view').classList.add('hidden');
+            document.getElementById('wait-state-view').classList.remove('flex');
+            document.getElementById('active-slots-view').classList.remove('hidden');
+            
+            const tagState = document.getElementById('loop-state-tag');
+            tagState.innerText = "ACTIVE PHASE";
+            tagState.className = "text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold";
+        }
+
+        // 5. SHUFFLE & DATA INJECTION PROCESS
+        function executeVisualDrawSequence(dataObj) {
+            restoreActivePhaseUI();
+            
+            const statusNode = document.getElementById('sync-status');
+            statusNode.innerHTML = `⏳ PROCESS CORES CONVERGING...`;
             statusNode.className = "text-amber-400 font-mono";
 
-            const cell = document.getElementById('digit-display');
-            const tag = document.getElementById('tag-display');
+            const cells = [document.getElementById('digit-1'), document.getElementById('digit-2')];
+            const tags = [document.getElementById('tag-1'), document.getElementById('tag-2')];
 
-            cell.className = "w-full font-digital text-8xl font-black text-center text-slate-700 bg-slate-950/90 rounded-2xl py-6 border border-slate-900";
-            tag.innerText = "CRYPTO";
-            tag.className = "text-sm font-black tracking-widest font-mono mt-3 px-6 py-1.5 rounded bg-slate-950 text-slate-600 w-full text-center";
+            cells.forEach(c => c.className = "w-full font-digital text-7xl font-black text-center text-slate-700 bg-slate-950/90 rounded-2xl py-5 border border-slate-900");
+            tags.forEach(t => {
+                t.innerText = "LOAD";
+                t.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-950 text-slate-600 w-full text-center";
+            });
 
             let iterations = 0;
             const scrollInterval = setInterval(() => {
-                // Generate absolute real volatile entropy random digits on screen during load state
-                const cryptoBuffer = new Uint32Array(1);
+                const cryptoBuffer = new Uint32Array(2);
                 window.crypto.getRandomValues(cryptoBuffer);
-                cell.innerText = cryptoBuffer[0] % 10;
+                cells[0].innerText = cryptoBuffer[0] % 10;
+                cells[1].innerText = cryptoBuffer[1] % 10;
                 iterations++;
 
-                if (iterations > 15) {
+                if (iterations > 14) {
                     clearInterval(scrollInterval);
 
                     // Inject values securely bound via synchronized real timeline
-                    cell.innerText = dataObj.digit;
-                    cell.className = "w-full font-digital text-8xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-6 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
+                    cells[0].innerText = dataObj.digit1;
+                    cells[1].innerText = dataObj.digit2;
+
+                    cells.forEach(cell => {
+                        cell.className = "w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
+                    });
                     
-                    if (dataObj.isBig) {
-                        tag.innerText = "BIG";
-                        tag.className = "text-sm font-black tracking-widest font-mono mt-3 px-6 py-1.5 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 text-shadow-[0_0_10px_rgba(244,63,94,0.3)] w-full text-center";
-                    } else {
-                        tag.innerText = "SMALL";
-                        tag.className = "text-sm font-black tracking-widest font-mono mt-3 px-6 py-1.5 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400 text-shadow-[0_0_10px_rgba(6,182,212,0.3)] w-full text-center";
-                    }
+                    tags.forEach(tag => {
+                        if (dataObj.isBig) {
+                            tag.innerText = "BIG";
+                            tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 text-shadow-[0_0_10px_rgba(244,63,94,0.3)] w-full text-center";
+                        } else {
+                            tag.innerText = "SMALL";
+                            tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400 text-shadow-[0_0_10px_rgba(6,182,212,0.3)] w-full text-center";
+                        }
+                    });
 
                     const exactTime = new Date().toLocaleTimeString();
                     document.getElementById('last-update').innerText = `SYNCED: ${exactTime}`;
                     
-                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> CRYPTO FRAME LOCK`;
+                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> LOGIC CONVERGED`;
                     statusNode.className = "text-emerald-400 flex items-center gap-1";
 
                     compileHistoryDatabaseLog(dataObj, exactTime);
                 }
-            }, 50);
+            }, 40);
         }
 
-        // 5. COMPREHENSIVE RECENT LEDGER HISTORICAL DATABASE PACKER
+        // 6. HISTORICAL LEDGER DATA LISTER
         function compileHistoryDatabaseLog(dataObj, timestamp) {
             const container = document.getElementById('history-box');
             const row = document.createElement('div');
@@ -249,7 +315,7 @@
                         ${labelText}
                     </div>
                 </div>
-                <span class="font-digital font-black text-base text-emerald-400 mr-2">${dataObj.digit}</span>
+                <span class="font-digital font-black text-sm text-emerald-400 tracking-[0.4em]">${dataObj.digit1}${dataObj.digit2}</span>
             `;
 
             container.insertBefore(row, container.firstChild);
@@ -259,7 +325,7 @@
             }
         }
 
-        // 6. CANVAS AMBIENT MATRIX DUST
+        // 7. CANVAS BACKGROUND DUST ANIMATION
         const canvas = document.getElementById('matrixDust');
         const ctx = canvas.getContext('2d');
         let dustArray = [];
@@ -297,13 +363,13 @@
             requestAnimationFrame(loopAnimation);
         }
 
-        // SYSTEM BOOTLOAD CORE
+        // SYSTEM INITIAL BOOTLOAD CALL
         window.onload = function() {
             createEngineDust();
             loopAnimation();
             runEngineClockPipeline();
 
-            // Historical data maps generator on immediate mount state
+            // Pre-renders clean history items
             for (let x = 1; x <= 3; x++) {
                 const pastData = calculateRealEngineMetrics(x);
                 if (pastData.blockID > 0) {
