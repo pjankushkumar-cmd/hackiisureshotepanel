@@ -90,7 +90,7 @@
 
             <div class="my-auto py-4">
                 <div id="lucky-number" class="font-digital text-[11rem] font-black text-emerald-400 neon-text-emerald tracking-tighter leading-none transition-all duration-300">
-                    7
+                    5
                 </div>
             </div>
 
@@ -124,9 +124,8 @@
     </footer>
 
     <script>
-        const LOOP_INTERVAL = 150; // Exact 2.5 Minutes
+        const LOOP_INTERVAL = 150; // Exact 2.5 Minutes (150 seconds)
         let timeEngineLeft = LOOP_INTERVAL;
-        let runningEngine = null;
 
         // 1. LIVE MASTER PRECISION CLOCK
         function runPrecisionClock() {
@@ -143,7 +142,6 @@
             const syncStatus = document.getElementById('sync-status');
             
             // Visual Shuffle Sequence
-            let shuffleCount = 0;
             numDisplay.classList.remove('neon-text-emerald', 'text-emerald-400');
             numDisplay.classList.add('text-slate-700');
             
@@ -171,7 +169,7 @@
                 const timestamp = new Date().toLocaleTimeString();
                 document.getElementById('last-update').innerText = `Fetched: ${timestamp}`;
                 
-                syncStatus.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 anonymity-ping"></span> Data Synced Successfully`;
+                syncStatus.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Data Synced Successfully`;
                 syncStatus.className = "text-emerald-400 flex items-center gap-1.5";
 
                 // Push to History Stream
@@ -192,7 +190,7 @@
             if (num % 2 === 0) accentColor = "text-emerald-400 bg-emerald-950/30 border-emerald-800/40";
             if (num === 0 || num === 5) accentColor = "text-purple-400 bg-purple-950/30 border-purple-800/40";
 
-            row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-2 rounded-xl border border-slate-900/60 animate-fade-in";
+            row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-2 rounded-xl border border-slate-900/60";
             row.innerHTML = `
                 <span class="text-xs text-slate-500 font-mono">${time}</span>
                 <span class="font-digital font-black text-sm px-2 py-0.5 rounded border ${accentColor}">${num}</span>
@@ -200,7 +198,7 @@
             
             historyBox.insertBefore(row, historyBox.firstChild);
 
-            // Limit buffer visualization to top 6 logs for perfect screen layout layout
+            // Limit buffer visualization to top 6 logs for perfect screen layout
             if(historyBox.children.length > 6){
                 historyBox.removeChild(historyBox.lastChild);
             }
