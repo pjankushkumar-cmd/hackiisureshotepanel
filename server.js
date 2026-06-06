@@ -22,25 +22,26 @@ function readDatabase() { return JSON.parse(fs.readFileSync(DB_FILE, 'utf8')); }
 function writeDatabase(data) { fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2)); }
 
 // API Endpoints for User Validation Protocols
-app.post('/api/auth/verify', (req, { json }) => {
+// Updated to use res.json()
+app.post('/api/auth/verify', (req, res) => {
     const { uid } = req.body;
-    if (!uid) return json({ status: "ERROR", message: "UID stack node missing." });
+    if (!uid) return res.json({ status: "ERROR", message: "UID stack node missing." });
 
     const db = readDatabase();
-    if (db.BANNED_REGISTRY[uid]) return json({ status: "REJECTED", message: "Hardware node blacklisted." });
-    if (db.APPROVED_UID_REGISTRY[uid]) return json({ status: "APPROVED" });
+    if (db.BANNED_REGISTRY[uid]) return res.json({ status: "REJECTED", message: "Hardware node blacklisted." });
+    if (db.APPROVED_UID_REGISTRY[uid]) return res.json({ status: "APPROVED" });
     
     if (!db.PENDING_REQUESTS.includes(uid)) {
         db.PENDING_REQUESTS.push(uid);
         writeDatabase(db);
     }
-    return json({ status: "PENDING", message: "Enqueued into tracking buffer pipeline." });
+    return res.json({ status: "PENDING", message: "Enqueued into tracking buffer pipeline." });
 });
 
 app.get('/api/admin/fetch-records', (req, res) => res.json(readDatabase()));
 
 app.post('/api/admin/modify-state', (req, res) => {
-    const { uid, action } = req.body; // Actions: 'ALLOW', 'BAN', 'RESET', 'DELETE'
+    const { uid, action } = req.body;
     const db = readDatabase();
 
     db.PENDING_REQUESTS = db.PENDING_REQUESTS.filter(id => id !== uid);
