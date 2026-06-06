@@ -3,322 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ HACKII PREMIUM ENGINE</title>
+    <title>⚡ HACKII PRO ENGINE v4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #020617;
+            background-color: #02040a;
             overflow: hidden;
             touch-action: manipulation;
         }
         .font-digital {
             font-family: 'Orbitron', sans-serif;
         }
-        /* Color Pop & Rainbow Gradient for HACKII */
-        .hackii-gradient {
-            background: linear-gradient(45deg, #ff007f, #7928ca, #00dfd8, #ff007f);
-            background-size: 300% 300%;
-            animation: rainbowShift 6s ease infinite;
+        /* HACKII Ultimate Multi-Color Glow Effect */
+        .hackii-glow {
+            background: linear-gradient(45deg, #ff0055, #00ffcc, #9900ff, #ff0055);
+            background-size: 200% auto;
+            animation: moveGlow 4s linear infinite;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
         }
-        @keyframes rainbowShift {
+        @keyframes moveGlow {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        /* Neon Highlights */
-        .neon-glow-cyan {
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.2);
-            border: 1px solid rgba(6, 182, 212, 0.4);
-        }
-        .neon-digit {
-            text-shadow: 0 0 20px rgba(16, 185, 129, 0.7);
+            100% { background-position: 200% 50%; }
         }
         .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(10, 15, 30, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .neon-box {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
         }
     </style>
 </head>
 <body class="text-slate-100 h-screen w-screen flex flex-col justify-between p-4 relative select-none">
 
-    <canvas id="bgCanvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
+    <canvas id="matrixDust" class="absolute inset-0 pointer-events-none z-0"></canvas>
 
-    <header class="w-full flex justify-between items-center z-10 pt-2 shrink-0">
+    <header class="w-full flex justify-between items-center z-10 pt-1 shrink-0">
         <div>
-            <h1 id="brand-tag" class="text-3xl font-black tracking-tighter hackii-gradient font-digital">
+            <h1 class="text-4xl font-black tracking-tighter hackii-glow font-digital">
                 HACKII
             </h1>
-            <p class="text-[9px] text-cyan-400/80 font-mono tracking-widest uppercase">Quantum 4-Digit Stream</p>
+            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Stream // Big-Small Analyzer</p>
         </div>
         
-        <div class="glass-card px-3 py-1.5 rounded-xl text-right border border-slate-800">
-            <span id="live-clock" class="font-digital text-sm text-cyan-400 tracking-wider">00:00:00 AM</span>
+        <div class="glass-card px-3 py-1 rounded-xl border border-slate-800">
+            <span id="live-clock" class="font-digital text-xs text-cyan-400 tracking-wider">00:00:00 PM</span>
         </div>
     </header>
 
-    <main class="w-full flex flex-col gap-4 my-auto z-10 relative justify-center">
+    <main class="w-full flex flex-col gap-4 my-auto z-10 relative">
         
-        <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border border-slate-800/80">
+        <div class="glass-card p-4 rounded-2xl border border-slate-800/80 shadow-md">
             <div class="flex justify-between items-center mb-1">
-                <span class="text-[10px] font-bold text-amber-500 tracking-widest uppercase">Next Sync Draw</span>
-                <span class="text-[10px] font-mono text-slate-500">RESET: 5:30 AM</span>
+                <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">ENGINE PULSE RATIO</span>
+                <span class="text-[10px] bg-amber-950/50 border border-amber-800/50 text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold">LOOP: 60S</span>
             </div>
             
             <div class="flex items-center justify-between">
-                <div id="countdown" class="font-digital text-4xl font-black text-amber-500 tracking-wide">
-                    02:30
+                <div id="countdown" class="font-digital text-4xl font-black text-amber-400 tracking-wider">
+                    01:00
                 </div>
-                <div class="text-[10px] text-slate-400 font-mono text-right">
-                    LOOP INTERVAL<br><span class="text-amber-400 font-bold">150 SECONDS</span>
+                <div class="text-[9px] text-slate-500 font-mono text-right uppercase">
+                    Reset Sync Target<br><span class="text-slate-400 font-bold">Every 1 Minute</span>
                 </div>
             </div>
 
-            <div class="w-full bg-slate-950 h-1.5 rounded-full mt-3 overflow-hidden border border-slate-900">
-                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full w-full transition-all duration-1000 ease-linear"></div>
+            <div class="w-full bg-slate-950 h-1 rounded-full mt-3 overflow-hidden border border-slate-900">
+                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-yellow-400 h-full w-full transition-all duration-1000 ease-linear"></div>
             </div>
         </div>
 
-        <div class="glass-card p-6 rounded-3xl text-center flex flex-col justify-between relative overflow-hidden neon-glow-cyan">
-            <span class="text-[11px] font-bold text-cyan-400 tracking-widest uppercase block mb-4">Live Matrix Output</span>
+        <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between relative overflow-hidden border border-slate-800 neon-box">
+            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-4">ALIGNED STREAM MATRIX</span>
 
-            <div class="grid grid-cols-4 gap-3 my-auto py-2 justify-center px-1">
-                <div id="digit-1" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
-                <div id="digit-2" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
-                <div id="digit-3" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
-                <div id="digit-4" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
+            <div class="grid grid-cols-4 gap-2 justify-center px-1">
+                
+                <div class="flex flex-col gap-1.5 items-center">
+                    <div id="digit-1" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
+                    <span id="tag-1" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
+                </div>
+
+                <div class="flex flex-col gap-1.5 items-center">
+                    <div id="digit-2" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
+                    <span id="tag-2" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
+                </div>
+
+                <div class="flex flex-col gap-1.5 items-center">
+                    <div id="digit-3" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
+                    <span id="tag-3" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
+                </div>
+
+                <div class="flex flex-col gap-1.5 items-center">
+                    <div id="digit-4" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
+                    <span id="tag-4" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
+                </div>
+
             </div>
 
-            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800/60 pt-4 mt-4">
+            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-3.5 mt-5">
                 <span id="sync-status" class="text-emerald-400 flex items-center gap-1">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Refresh Proof Safe Logic
+                    <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Live Safe Algorithmic State
                 </span>
-                <span id="last-update">Init: Active</span>
+                <span id="last-update">Secured</span>
             </div>
         </div>
 
-        <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border border-slate-800/80">
-            <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-2 block border-b border-slate-800/60 pb-1.5">Recent Generated Sequence</span>
+        <div class="glass-card p-4 rounded-2xl border border-slate-800/80">
+            <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-2 block border-b border-slate-900 pb-1">HISTORICAL RECENT INDEX</span>
 
-            <div id="history-box" class="flex flex-col gap-2 max-h-[140px] overflow-y-auto pr-0.5">
+            <div id="history-box" class="flex flex-col gap-2 max-h-[120px] overflow-y-auto">
                 </div>
         </div>
 
     </main>
 
-    <footer class="w-full text-center text-[9px] text-slate-600 font-mono tracking-wider shrink-0 pb-2 z-10">
-        HACKII MATRIX ENGINE // MATHEMATICAL CORRELATION SECURE
+    <footer class="w-full text-center text-[9px] text-slate-700 font-mono tracking-widest shrink-0 pb-1 z-10">
+        SECURE INTEGRATION LOCK // REFRESH STABLE FORMULA
     </footer>
 
     <script>
-        const BLOCK_LOOP = 150; // 2.5 Minutes loop in seconds
-        let currentSecondsLeft = BLOCK_LOOP;
-        let activePeriodIndex = 0;
+        const LOOP_SECONDS = 60; // 1 Minute Pure Sync Loop
+        let activeBlockIndex = -1;
 
-        // 1. DIGITAL LIVE CLOCK SYSTEM
-        function updateSystemClock() {
+        // 1. CLOCK SYNCHRONIZATION RUNNER
+        function triggerClockPipeline() {
             const timeObj = new Date();
             document.getElementById('live-clock').innerText = timeObj.toLocaleTimeString('en-US', {
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
             });
             
-            // Execute automated synchronization logic every second
-            syncEnginePipeline();
+            // Re-evaluates mathematically derived parameters dynamically every second
+            processTimeCoreEngine();
         }
-        setInterval(updateSystemClock, 1000);
+        setInterval(triggerClockPipeline, 1000);
 
-        // 2. MATHEMATICAL TIME-ALIGNED SEED LOGIC (REFRESH PROOF)
-        function calculateTimeBlockMetrics() {
+        // 2. MATHEMATICAL 1-MINUTE TIME BLOCK CALCULATIONS (REFRESH SAFE)
+        function extractDynamicMetrics() {
             const now = new Date();
             
-            // Core Daily Reset Baseline: Today at 5:30 AM
-            let resetBase = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
-            
-            // Handle early morning rollbacks
-            if (now < resetBase) {
-                resetBase.setDate(resetBase.getDate() - 1);
+            // Daily System Reset Baseline Frame: 5:30 AM Today
+            let baseReset = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
+            if (now < baseReset) {
+                baseReset.setDate(baseReset.getDate() - 1);
             }
 
-            // Total seconds transpired since 5:30 AM
-            const elapsedSeconds = Math.floor((now - resetBase) / 1000);
+            // Absolute total delta seconds passed since morning reset point
+            const deltaSeconds = Math.floor((now - baseReset) / 1000);
             
-            // Extract current 2.5 minute sequence number
-            const targetBlockIndex = Math.floor(elapsedSeconds / BLOCK_LOOP);
+            // Calculate current 1-minute sequential block position ID
+            const activeBlockId = Math.floor(deltaSeconds / LOOP_SECONDS);
             
-            // Remaining countdown seconds for current block
-            const secondsRemaining = BLOCK_LOOP - (elapsedSeconds % BLOCK_LOOP);
+            // Remaining countdown seconds inside the active minute block
+            const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
 
-            // Generate 4 deterministic digits using separate unique mathematical anchors
-            const digits = [];
-            for(let i = 1; i <= 4; i++) {
-                const customSeed = (targetBlockIndex + 1) * (i * 31) + resetBase.getDate() * 97;
-                const trigFormula = Math.abs(Math.sin(customSeed) * 1000) % 10;
-                digits.push(Math.floor(trigFormula));
+            // Compute 4 independent deterministic math results based strictly on the current time seed
+            const finalDigits = [];
+            for (let i = 1; i <= 4; i++) {
+                const combinedSeed = (activeBlockId + 1) * (i * 43) + baseReset.getDate() * 101;
+                const trigValue = Math.abs(Math.sin(combinedSeed) * 5000) % 10;
+                finalDigits.push(Math.floor(trigValue));
             }
 
             return {
-                blockID: targetBlockIndex + 1,
-                countdown: secondsRemaining,
-                digitArray: digits
+                blockID: activeBlockId + 1,
+                countdown: countdownRemaining,
+                digits: finalDigits
             };
         }
 
-        // 3. PIPELINE REFRESH-PROOF ALIGNER
-        function syncEnginePipeline() {
-            const data = calculateTimeBlockMetrics();
+        // 3. PIPELINE REFRESH MATCHING MACHINE
+        function processTimeCoreEngine() {
+            const data = extractDynamicMetrics();
             
-            // Format countdown string
-            const m = String(Math.floor(data.countdown / 60)).padStart(2, '0');
+            // Format dynamic countdown presentation
             const s = String(data.countdown % 60).padStart(2, '0');
-            
             const countDisplay = document.getElementById('countdown');
-            countDisplay.innerText = `${m}:${s}`;
+            countDisplay.innerText = `00:${s}`;
             
-            // Align Progress Indicator
-            document.getElementById('progress-bar').style.width = `${(data.countdown / BLOCK_LOOP) * 100}%`;
+            // Set linear tracking width percent
+            document.getElementById('progress-bar').style.width = `${(data.countdown / LOOP_SECONDS) * 100}%`;
 
-            // Flash red warning if countdown dips below 15 seconds
-            if(data.countdown <= 15) {
+            // Turn clock red inside critical 10-second buffer limits
+            if(data.countdown <= 10) {
                 countDisplay.className = "font-digital text-4xl font-black text-red-500 animate-pulse";
             } else {
-                countDisplay.className = "font-digital text-4xl font-black text-amber-500";
+                countDisplay.className = "font-digital text-4xl font-black text-amber-400";
             }
 
-            // If new time block sequence index shifts, trigger matrix shuffle draw
-            if (activePeriodIndex !== data.blockID) {
-                executeMatrixShuffle(data.digitArray, data.blockID);
-                activePeriodIndex = data.blockID;
+            // Trigger roll shuffle animation lock sequence if the minute block steps over
+            if (activeBlockIndex !== data.blockID) {
+                executeEngineDraw(data.digits, data.blockID);
+                activeBlockIndex = data.blockID;
             }
         }
 
-        // 4. MATRIX SLOT MACHINE INDEPENDENT MULTI-DIGIT SHUFFLE
-        function executeMatrixShuffle(finalDigits, sequenceId) {
-            const syncStatus = document.getElementById('sync-status');
-            syncStatus.innerHTML = `⏳ Matrix Syncing...`;
-            syncStatus.className = "text-amber-400 font-mono";
+        // 4. MATRIX PATTERN MATRIX SHUFFLE & CHARACTER ANALYZER
+        function executeEngineDraw(targetNumbers, seqId) {
+            const statusNode = document.getElementById('sync-status');
+            statusNode.innerHTML = `⏳ Analyzing Stream Vectors...`;
+            statusNode.className = "text-amber-400 font-mono";
 
-            const slots = [
+            const cells = [
                 document.getElementById('digit-1'),
                 document.getElementById('digit-2'),
                 document.getElementById('digit-3'),
                 document.getElementById('digit-4')
             ];
 
-            // Trigger visual text color off during roll
-            slots.forEach(slot => {
-                slot.className = "font-digital text-6xl font-black text-slate-700 bg-slate-950/80 rounded-2xl py-4 border border-slate-900";
+            const tags = [
+                document.getElementById('tag-1'),
+                document.getElementById('tag-2'),
+                document.getElementById('tag-3'),
+                document.getElementById('tag-4')
+            ];
+
+            // Turn cells gray into scrolling states
+            cells.forEach(c => c.className = "w-full font-digital text-5xl font-black text-center text-slate-700 bg-slate-950/90 rounded-xl py-3 border border-slate-900");
+            tags.forEach(t => {
+                t.innerText = "ROLL";
+                t.className = "text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-950 text-slate-600";
             });
 
             let iterations = 0;
-            const liveShuffle = setInterval(() => {
-                slots.forEach(slot => {
-                    slot.innerText = Math.floor(Math.random() * 10);
-                });
+            const scrollInterval = setInterval(() => {
+                cells.forEach(c => c.innerText = Math.floor(Math.random() * 10));
                 iterations++;
 
-                // Stop roll sequence and apply final mathematical values
-                if(iterations > 10) {
-                    clearInterval(liveShuffle);
-                    
-                    finalDigits.forEach((digitValue, index) => {
-                        slots[index].innerText = digitValue;
-                        slots[index].className = "font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit transition-all duration-200";
+                if (iterations > 12) {
+                    clearInterval(scrollInterval);
+
+                    // Map structural digit variables and output clean BIG / SMALL tags
+                    targetNumbers.forEach((val, idx) => {
+                        cells[idx].innerText = val;
+                        cells[idx].className = "w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
+                        
+                        // Rule Logic Parser (0-4 Small, 5-9 Big)
+                        if (val >= 5) {
+                            tags[idx].innerText = "BIG";
+                            tags[idx].className = "text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400";
+                        } else {
+                            tags[idx].innerText = "SMALL";
+                            tags[idx].className = "text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400";
+                        }
                     });
 
-                    const timestampStr = new Date().toLocaleTimeString();
-                    document.getElementById('last-update').innerText = `Sync: ${timestampStr}`;
+                    const exactTime = new Date().toLocaleTimeString();
+                    document.getElementById('last-update').innerText = `Synced: ${exactTime}`;
                     
-                    syncStatus.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Time-Synced Live`;
-                    syncStatus.className = "text-emerald-400 flex items-center gap-1";
+                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Matrix Synced Successfully`;
+                    statusNode.className = "text-emerald-400 flex items-center gap-1";
 
-                    // Prepend final sequence array into historical rows
-                    appendHistoryRow(finalDigits.join(" "), timestampStr);
+                    // Prepend final sequence map down into dynamic list matrix
+                    compileHistoryLog(targetNumbers, exactTime);
                 }
             }, 40);
         }
 
-        // 5. CLEAN DYNAMIC LOG PACKER
-        function appendHistoryRow(digitString, timestamp) {
-            const box = document.getElementById('history-box');
-            const element = document.createElement('div');
-            
-            element.className = "flex justify-between items-center bg-slate-950/70 px-4 py-2 rounded-xl border border-slate-900";
-            element.innerHTML = `
-                <span class="text-xs text-slate-500 font-mono">${timestamp}</span>
-                <span class="font-digital font-black text-base text-cyan-400 tracking-widest">${digitString}</span>
-            `;
-            
-            box.insertBefore(element, box.firstChild);
+        // 5. PACK DATA HISTORY LOG COMPILER
+        function compileHistoryLog(numbersArray, timestamp) {
+            const container = document.getElementById('history-box');
+            const row = document.createElement('div');
 
-            // Bounded historical records to max 4 slots for clear layout scaling
-            if(box.children.length > 4) {
-                box.removeChild(box.lastChild);
+            // Formats explicit sub-tags to match outputs perfectly inside history logs
+            const computedTagsStr = numbersArray.map(v => v >= 5 ? `<span class="text-[9px] font-bold text-pink-400">B</span>` : `<span class="text-[9px] font-bold text-cyan-400">S</span>`).join("");
+
+            row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-900/80 animate-fade-in";
+            row.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-slate-500 font-mono">${timestamp}</span>
+                    <div class="flex gap-0.5">${computedTagsStr}</div>
+                </div>
+                <span class="font-digital font-black text-sm text-cyan-400 tracking-[0.25em]">${numbersArray.join("")}</span>
+            `;
+
+            container.insertBefore(row, container.firstChild);
+
+            // Bounded historical records strictly down to 4 items for layout stability
+            if(container.children.length > 4) {
+                container.removeChild(container.lastChild);
             }
         }
 
-        // 6. MINIMAL CANVAS AMBIENT BACKGROUND INTERACTIVE PARTICLES
-        const canvas = document.getElementById('bgCanvas');
+        // 6. CANVAS AMBIENT MATRIX PARTICLES
+        const canvas = document.getElementById('matrixDust');
         const ctx = canvas.getContext('2d');
-        let dots = [];
+        let dustArray = [];
 
-        function resizeCanvas() {
+        function setBoundaries() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        window.addEventListener('resize', setBoundaries);
+        setBoundaries();
 
-        class MicroDot {
+        class Dust {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.vY = Math.random() * 0.15 + 0.05;
+                this.speed = Math.random() * 0.12 + 0.04;
             }
-            update() {
-                this.y += this.vY;
+            slide() {
+                this.y += this.speed;
                 if(this.y > canvas.height) this.y = 0;
             }
-            draw() {
-                ctx.fillStyle = 'rgba(6, 182, 212, 0.08)';
-                ctx.fillRect(this.x, this.y, 1.5, 1.5);
+            render() {
+                ctx.fillStyle = 'rgba(153, 0, 255, 0.08)';
+                ctx.fillRect(this.x, this.y, 1.2, 1.2);
             }
         }
 
-        function setupDots() {
-            for(let i = 0; i < 40; i++) dots.push(new MicroDot());
+        function createEngineDust() {
+            for(let i = 0; i < 35; i++) dustArray.push(new Dust());
         }
 
-        function runAnimationLoop() {
+        function loopAnimation() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            dots.forEach(d => { d.update(); d.draw(); });
-            requestAnimationFrame(runAnimationLoop);
+            dustArray.forEach(d => { d.slide(); d.render(); });
+            requestAnimationFrame(loopAnimation);
         }
 
-        // CORES ENGINE EXECUTION
+        // CORE ENGINE KICKSTART ENTRYPOINT
         window.onload = function() {
-            setupDots();
-            runAnimationLoop();
+            createEngineDust();
+            loopAnimation();
             
-            // Core Boot Call
-            updateSystemClock();
+            // Runs time alignment parameters immediately on bootup
+            triggerClockPipeline();
 
-            // Mathematically pre-fill history records on instant load based on past sequence blocks
-            const initialMetrics = calculateTimeBlockMetrics();
-            let refID = initialMetrics.blockID;
-            for(let k = 1; k <= 3; k++) {
-                let checkID = refID - k;
-                if(checkID > 0) {
-                    const historicalDigits = [];
-                    for(let i = 1; i <= 4; i++) {
-                        const pastSeed = checkID * (i * 31) + new Date().getDate() * 97;
-                        historicalDigits.push(Math.floor(Math.abs(Math.sin(pastSeed) * 1000) % 10));
+            // Auto-populates historical lines mathematically from past blocks during hard refreshes
+            const initMetrics = extractDynamicMetrics();
+            let baseID = initMetrics.blockID;
+            for (let x = 1; x <= 3; x++) {
+                let checkBlock = baseID - x;
+                if (checkBlock > 0) {
+                    const historicalArray = [];
+                    for (let i = 1; i <= 4; i++) {
+                        const pastSeed = checkBlock * (i * 43) + new Date().getDate() * 101;
+                        historicalArray.push(Math.floor(Math.abs(Math.sin(pastSeed) * 5000) % 10));
                     }
-                    appendHistoryRow(historicalDigits.join(" "), `Past Step -${k}`);
+                    compileHistoryLog(historicalArray, `Block -${x}m`);
                 }
             }
         };
