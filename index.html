@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ HACKII PRO ENGINE v4.0</title>
+    <title>⚡ HACKII TWO-DIGIT ENGINE v5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
@@ -36,7 +36,10 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .neon-box {
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+        }
+        .neon-digit {
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
         }
     </style>
 </head>
@@ -49,7 +52,7 @@
             <h1 class="text-4xl font-black tracking-tighter hackii-glow font-digital">
                 HACKII
             </h1>
-            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Stream // Big-Small Analyzer</p>
+            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Stream // Dual Analyzer</p>
         </div>
         
         <div class="glass-card px-3 py-1 rounded-xl border border-slate-800">
@@ -67,7 +70,7 @@
             
             <div class="flex items-center justify-between">
                 <div id="countdown" class="font-digital text-4xl font-black text-amber-400 tracking-wider">
-                    01:00
+                    00:00
                 </div>
                 <div class="text-[9px] text-slate-500 font-mono text-right uppercase">
                     Reset Sync Target<br><span class="text-slate-400 font-bold">Every 1 Minute</span>
@@ -79,34 +82,24 @@
             </div>
         </div>
 
-        <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between relative overflow-hidden border border-slate-800 neon-box">
-            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-4">ALIGNED STREAM MATRIX</span>
+        <div class="glass-card p-6 rounded-3xl flex flex-col justify-between relative overflow-hidden border border-slate-800 neon-box">
+            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-5">ALIGNED STREAM MATRIX</span>
 
-            <div class="grid grid-cols-4 gap-2 justify-center px-1">
+            <div class="grid grid-cols-2 gap-4 justify-center px-4">
                 
-                <div class="flex flex-col gap-1.5 items-center">
-                    <div id="digit-1" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
-                    <span id="tag-1" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
+                <div class="flex flex-col gap-2.5 items-center">
+                    <div id="digit-1" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-900/40 neon-digit">0</div>
+                    <span id="tag-1" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900">--</span>
                 </div>
 
-                <div class="flex flex-col gap-1.5 items-center">
-                    <div id="digit-2" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
-                    <span id="tag-2" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
-                </div>
-
-                <div class="flex flex-col gap-1.5 items-center">
-                    <div id="digit-3" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
-                    <span id="tag-3" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
-                </div>
-
-                <div class="flex flex-col gap-1.5 items-center">
-                    <div id="digit-4" class="w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-900/40">0</div>
-                    <span id="tag-4" class="text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-900">--</span>
+                <div class="flex flex-col gap-2.5 items-center">
+                    <div id="digit-2" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-900/40 neon-digit">0</div>
+                    <span id="tag-2" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900">--</span>
                 </div>
 
             </div>
 
-            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-3.5 mt-5">
+            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-4 mt-6">
                 <span id="sync-status" class="text-emerald-400 flex items-center gap-1">
                     <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Live Safe Algorithmic State
                 </span>
@@ -128,7 +121,7 @@
     </footer>
 
     <script>
-        const LOOP_SECONDS = 60; // 1 Minute Pure Sync Loop
+        const LOOP_SECONDS = 60; // Exact 1 Minute Sync Loop
         let activeBlockIndex = -1;
 
         // 1. CLOCK SYNCHRONIZATION RUNNER
@@ -138,7 +131,6 @@
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
             });
             
-            // Re-evaluates mathematically derived parameters dynamically every second
             processTimeCoreEngine();
         }
         setInterval(triggerClockPipeline, 1000);
@@ -153,20 +145,15 @@
                 baseReset.setDate(baseReset.getDate() - 1);
             }
 
-            // Absolute total delta seconds passed since morning reset point
             const deltaSeconds = Math.floor((now - baseReset) / 1000);
-            
-            // Calculate current 1-minute sequential block position ID
             const activeBlockId = Math.floor(deltaSeconds / LOOP_SECONDS);
-            
-            // Remaining countdown seconds inside the active minute block
             const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
 
-            // Compute 4 independent deterministic math results based strictly on the current time seed
+            // Compute exactly 2 independent stable digits from time seed
             const finalDigits = [];
-            for (let i = 1; i <= 4; i++) {
-                const combinedSeed = (activeBlockId + 1) * (i * 43) + baseReset.getDate() * 101;
-                const trigValue = Math.abs(Math.sin(combinedSeed) * 5000) % 10;
+            for (let i = 1; i <= 2; i++) {
+                const combinedSeed = (activeBlockId + 1) * (i * 73) + baseReset.getDate() * 131;
+                const trigValue = Math.abs(Math.sin(combinedSeed) * 8000) % 10;
                 finalDigits.push(Math.floor(trigValue));
             }
 
@@ -181,29 +168,25 @@
         function processTimeCoreEngine() {
             const data = extractDynamicMetrics();
             
-            // Format dynamic countdown presentation
             const s = String(data.countdown % 60).padStart(2, '0');
             const countDisplay = document.getElementById('countdown');
             countDisplay.innerText = `00:${s}`;
             
-            // Set linear tracking width percent
             document.getElementById('progress-bar').style.width = `${(data.countdown / LOOP_SECONDS) * 100}%`;
 
-            // Turn clock red inside critical 10-second buffer limits
             if(data.countdown <= 10) {
                 countDisplay.className = "font-digital text-4xl font-black text-red-500 animate-pulse";
             } else {
                 countDisplay.className = "font-digital text-4xl font-black text-amber-400";
             }
 
-            // Trigger roll shuffle animation lock sequence if the minute block steps over
             if (activeBlockIndex !== data.blockID) {
                 executeEngineDraw(data.digits, data.blockID);
                 activeBlockIndex = data.blockID;
             }
         }
 
-        // 4. MATRIX PATTERN MATRIX SHUFFLE & CHARACTER ANALYZER
+        // 4. MATRIX SHUFFLE & BIG/SMALL CHARACTER ANALYZER
         function executeEngineDraw(targetNumbers, seqId) {
             const statusNode = document.getElementById('sync-status');
             statusNode.innerHTML = `⏳ Analyzing Stream Vectors...`;
@@ -211,23 +194,18 @@
 
             const cells = [
                 document.getElementById('digit-1'),
-                document.getElementById('digit-2'),
-                document.getElementById('digit-3'),
-                document.getElementById('digit-4')
+                document.getElementById('digit-2')
             ];
 
             const tags = [
                 document.getElementById('tag-1'),
-                document.getElementById('tag-2'),
-                document.getElementById('tag-3'),
-                document.getElementById('tag-4')
+                document.getElementById('tag-2')
             ];
 
-            // Turn cells gray into scrolling states
-            cells.forEach(c => c.className = "w-full font-digital text-5xl font-black text-center text-slate-700 bg-slate-950/90 rounded-xl py-3 border border-slate-900");
+            cells.forEach(c => c.className = "w-full font-digital text-7xl font-black text-center text-slate-700 bg-slate-950/90 rounded-2xl py-5 border border-slate-900");
             tags.forEach(t => {
                 t.innerText = "ROLL";
-                t.className = "text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-slate-950 text-slate-600";
+                t.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-950 text-slate-600";
             });
 
             let iterations = 0;
@@ -238,53 +216,49 @@
                 if (iterations > 12) {
                     clearInterval(scrollInterval);
 
-                    // Map structural digit variables and output clean BIG / SMALL tags
                     targetNumbers.forEach((val, idx) => {
                         cells[idx].innerText = val;
-                        cells[idx].className = "w-full font-digital text-5xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-xl py-3 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
+                        cells[idx].className = "w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
                         
-                        // Rule Logic Parser (0-4 Small, 5-9 Big)
+                        // Strict 0-4 Small, 5-9 Big Logic Parser
                         if (val >= 5) {
                             tags[idx].innerText = "BIG";
-                            tags[idx].className = "text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400";
+                            tags[idx].className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 text-shadow-[0_0_10px_rgba(244,63,94,0.3)]";
                         } else {
                             tags[idx].innerText = "SMALL";
-                            tags[idx].className = "text-[10px] font-black tracking-wider font-mono px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400";
+                            tags[idx].className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400 text-shadow-[0_0_10px_rgba(6,182,212,0.3)]";
                         }
                     });
 
                     const exactTime = new Date().toLocaleTimeString();
                     document.getElementById('last-update').innerText = `Synced: ${exactTime}`;
                     
-                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Matrix Synced Successfully`;
+                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Matrix Synced`;
                     statusNode.className = "text-emerald-400 flex items-center gap-1";
 
-                    // Prepend final sequence map down into dynamic list matrix
                     compileHistoryLog(targetNumbers, exactTime);
                 }
             }, 40);
         }
 
-        // 5. PACK DATA HISTORY LOG COMPILER
+        // 5. DATA HISTORY LOG COMPILER
         function compileHistoryLog(numbersArray, timestamp) {
             const container = document.getElementById('history-box');
             const row = document.createElement('div');
 
-            // Formats explicit sub-tags to match outputs perfectly inside history logs
-            const computedTagsStr = numbersArray.map(v => v >= 5 ? `<span class="text-[9px] font-bold text-pink-400">B</span>` : `<span class="text-[9px] font-bold text-cyan-400">S</span>`).join("");
+            const computedTagsStr = numbersArray.map(v => v >= 5 ? `<span class="text-[10px] font-bold text-pink-400 px-1 bg-pink-950/20 rounded border border-pink-900/30">BIG</span>` : `<span class="text-[10px] font-bold text-cyan-400 px-1 bg-cyan-950/20 rounded border border-cyan-900/30">SMALL</span>`).join(" ");
 
-            row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-900/80 animate-fade-in";
+            row.className = "flex justify-between items-center bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-900/80";
             row.innerHTML = `
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
                     <span class="text-[10px] text-slate-500 font-mono">${timestamp}</span>
-                    <div class="flex gap-0.5">${computedTagsStr}</div>
+                    <div class="flex gap-1.5">${computedTagsStr}</div>
                 </div>
-                <span class="font-digital font-black text-sm text-cyan-400 tracking-[0.25em]">${numbersArray.join("")}</span>
+                <span class="font-digital font-black text-base text-emerald-400 tracking-[0.4em]">${numbersArray.join(" ")}</span>
             `;
 
             container.insertBefore(row, container.firstChild);
 
-            // Bounded historical records strictly down to 4 items for layout stability
             if(container.children.length > 4) {
                 container.removeChild(container.lastChild);
             }
@@ -328,26 +302,24 @@
             requestAnimationFrame(loopAnimation);
         }
 
-        // CORE ENGINE KICKSTART ENTRYPOINT
+        // CORE ENGINE KICKSTART
         window.onload = function() {
             createEngineDust();
             loopAnimation();
-            
-            // Runs time alignment parameters immediately on bootup
             triggerClockPipeline();
 
-            // Auto-populates historical lines mathematically from past blocks during hard refreshes
+            // Auto-populates historical lines mathematically on refresh
             const initMetrics = extractDynamicMetrics();
             let baseID = initMetrics.blockID;
             for (let x = 1; x <= 3; x++) {
                 let checkBlock = baseID - x;
                 if (checkBlock > 0) {
                     const historicalArray = [];
-                    for (let i = 1; i <= 4; i++) {
-                        const pastSeed = checkBlock * (i * 43) + new Date().getDate() * 101;
-                        historicalArray.push(Math.floor(Math.abs(Math.sin(pastSeed) * 5000) % 10));
+                    for (let i = 1; i <= 2; i++) {
+                        const pastSeed = checkBlock * (i * 73) + new Date().getDate() * 131;
+                        historicalArray.push(Math.floor(Math.abs(Math.sin(pastSeed) * 8000) % 10));
                     }
-                    compileHistoryLog(historicalArray, `Block -${x}m`);
+                    compileHistoryLog(historicalArray, `Past Block -${x}m`);
                 }
             }
         };
