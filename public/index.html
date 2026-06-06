@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ HACKII PANEL CORE v9.5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #02040c; overflow: hidden; }
+        .font-digital { font-family: 'Orbitron', sans-serif; }
+        .cyber-glow {
+            background: linear-gradient(90deg, #ff0055, #7000ff, #00f0ff, #ff0055);
+            background-size: 200% auto;
+            animation: moveShimmer 4s linear infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        @keyframes moveShimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        .premium-card { background: rgba(11, 19, 43, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 0 50px rgba(112,0,255,0.15); }
+        #toast-layer { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: translateY(150%) translateX(-50%); }
+        #toast-layer.active { transform: translateY(0) translateX(-50%); }
+    </style>
+</head>
+<body class="text-slate-200 h-screen w-screen flex flex-col justify-between p-6 select-none relative">
+
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:30px_30px]"></div>
+
+    <header class="w-full flex justify-between items-center z-10">
+        <span class="text-[10px] font-mono tracking-[0.3em] text-cyan-500 uppercase">SYS_NODE_v9.5_LIVE</span>
+        <a href="https://t.me/hackii_sureshote" target="_blank" class="premium-card px-4 py-1.5 rounded-xl text-xs text-purple-400 font-bold border border-purple-500/30">TELEGRAM</a>
+    </header>
+
+    <main class="w-full max-w-md mx-auto z-10 flex flex-col gap-6 my-auto">
+        <div class="text-center">
+            <h1 class="text-4xl font-black font-digital tracking-tight uppercase cyber-glow">HACKII PANEL 100K</h1>
+            <p class="text-[10px] text-cyan-400 font-mono tracking-[0.4em] uppercase mt-2">HIGH PERFORMANCE INTERFACE</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 w-full">
+            <div class="premium-card p-3 rounded-2xl text-center">
+                <p class="text-[9px] font-mono text-slate-500 uppercase">LIVE USERS</p>
+                <p id="live-members" class="font-digital text-lg font-bold text-emerald-400 mt-0.5">48,290</p>
+            </div>
+            <div class="premium-card p-3 rounded-2xl text-center">
+                <p class="text-[9px] font-mono text-slate-500 uppercase">LATENCY RESPONSE</p>
+                <p class="font-digital text-lg font-bold text-amber-400 mt-0.5">0.02ms</p>
+            </div>
+        </div>
+
+        <div class="w-full premium-card p-6 rounded-3xl relative overflow-hidden">
+            <label class="block text-[10px] font-bold text-slate-400 font-mono tracking-widest uppercase mb-3">ENTER SYSTEM UNIQUE ID (UID):</label>
+            <input type="text" id="node-uid-input" placeholder="ENTER UID..." 
+                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-center font-digital text-xl tracking-widest text-cyan-400 focus:outline-none focus:border-cyan-500/50 mb-4 uppercase">
+            
+            <button onclick="executeSecureLogin()" 
+                class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-slate-950 font-black tracking-widest uppercase py-4 rounded-xl font-mono text-xs shadow-lg transition-transform active:scale-95">
+                ESTABLISH CONNECTION
+            </button>
+
+            <div class="w-full flex justify-between items-center mt-6 pt-4 border-t border-slate-900 text-xs font-mono">
+                <span class="text-slate-500">No Account?</span>
+                <a href="https://4yaarwin.com/#/register?invitationCode=18426755757" target="_blank" class="text-amber-400 font-bold hover:underline tracking-wide">REGISTER NOW 🔗</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full text-center text-[9px] text-slate-700 font-mono tracking-widest uppercase z-10">
+        ENCRYPTED SECURITY LAYER SECURELY LOADED
+    </footer>
+
+    <div id="toast-layer" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 premium-card px-5 py-3 rounded-xl text-xs font-mono text-cyan-300 flex items-center gap-2 max-w-[90vw]">
+        <span id="toast-msg">SYSTEM LOG: ENGINE READY</span>
+    </div>
+
+    <script>
+        const ADM_TOKEN = "HACKII@786";
+
+        setInterval(() => {
+            const node = document.getElementById('live-members');
+            if(node && Math.random() > 0.4) {
+                let current = parseInt(node.innerText.replace(/,/g, ''));
+                node.innerText = (current + Math.floor(Math.random() * 3) + 1).toLocaleString();
+            }
+        }, 2000);
+
+        function executeSecureLogin() {
+            const input = document.getElementById('node-uid-input');
+            const val = input ? input.value.trim() : "";
+
+            if(!val) { displayToast("⚠️ FIELD VALUE PARAMETER EMPTY!"); return; }
+
+            if(val === ADM_TOKEN) {
+                displayToast("🔑 ROOT LEVEL HANDSHAKE SUCCESS... EXECUTING ROUTE.");
+                sessionStorage.setItem('ADM_AUTH_SESSION', 'ACTIVE');
+                setTimeout(() => { window.location.href = "admin.html"; }, 800);
+                return;
+            }
+
+            fetch('/api/auth/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid: val })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "APPROVED") {
+                    displayToast("✅ HARDWARE TOKEN VERIFIED! INJECTING ARRAYS...");
+                    localStorage.setItem('USER_VALID_SESSION_UID', val);
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 800);
+                } else if(data.status === "PENDING") {
+                    displayToast("⏳ APPLIED KEY LOGGED! WAIT FOR THE ADMIN ROOM TO APPROVE.");
+                } else {
+                    displayToast(`❌ DENIED: ${data.message}`);
+                }
+            })
+            .catch(() => displayToast("🚨 INTERFACE OFFLINE: RUN SERVER.JS BACKEND!"));
+        }
+
+        let tOut;
+        function displayToast(msg) {
+            const box = document.getElementById('toast-layer');
+            const txt = document.getElementById('toast-msg');
+            if(!box || !txt) return;
+            txt.innerText = msg;
+            box.classList.add('active');
+            clearTimeout(tOut);
+            tOut = setTimeout(() => box.classList.remove('active'), 3000);
+        }
+    </script>
+</body>
+</html>
