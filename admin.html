@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚙️ HACKII MASTER ADMIN CONTROL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #02040a; }
+        .font-digital { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(13, 17, 30, 0.75); border: 1px solid rgba(139, 92, 246, 0.15); }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen p-5 flex flex-col items-center">
+
+    <div class="w-full max-w-lg mt-4 flex flex-col gap-6">
+        <div class="flex justify-between items-center border-b border-purple-900/40 pb-4">
+            <div>
+                <h1 class="text-2xl font-black tracking-tight text-purple-400 font-digital">HACKII SUPREME ADMIN</h1>
+                <p class="text-[10px] text-slate-500 font-mono tracking-widest uppercase">STRICT SECURE ACCESS CONTROLLER</p>
+            </div>
+            <span class="bg-purple-950 text-purple-400 border border-purple-800/60 px-2 py-0.5 rounded text-[10px] font-mono font-bold animate-pulse">GATEWAY ENGINE</span>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl shadow-xl">
+            <h2 class="text-xs font-bold text-slate-400 font-mono tracking-widest uppercase mb-3">FORCE APPROVE / ADD MANUAL UID</h2>
+            <div class="flex gap-2">
+                <input type="text" id="manual-uid-input" placeholder="Enter member UID number..."
+                    class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 font-digital text-cyan-400 text-center tracking-widest focus:outline-none focus:border-purple-500">
+                <button onclick="addManualApprovedUID()" class="bg-purple-600 hover:bg-purple-500 text-slate-950 font-bold px-5 rounded-xl font-mono text-xs transition-all tracking-wider">
+                    ALLOW ACCESS
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl flex-1 flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-900 pb-2">
+                <span class="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider">LIVE MEMBER REQUEST QUEUE:</span>
+                <button onclick="clearAllRegistries()" class="text-[10px] text-rose-500 hover:underline font-mono uppercase">Purge All Users</button>
+            </div>
+
+            <div id="admin-queue-container" class="flex flex-col gap-2.5 max-h-[55vh] overflow-y-auto pr-1"></div>
+        </div>
+    </div>
+
+    <div id="toast-notify" class="fixed bottom-6 bg-purple-950 border border-purple-500/30 text-purple-300 font-mono text-xs px-4 py-2.5 rounded-xl shadow-2xl pointer-events-none opacity-0 transition-opacity duration-300">
+        Sync success!
+    </div>
+
+    <script>
+        function getGlobalDatabase() {
+            return JSON.parse(localStorage.getItem('HACKII_GLOBAL_UID_STORE')) || {
+                "99999": "APPROVED"
+            };
+        }
+
+        function saveGlobalDatabase(db) {
+            localStorage.setItem('HACKII_GLOBAL_UID_STORE', JSON.stringify(db));
+            rebuildInterface();
+        }
+
+        function addManualApprovedUID() {
+            const input = document.getElementById('manual-uid-input');
+            const uid = input.value.trim();
+            if(!uid) { alertToast("⚠️ Error: Target UID field is blank!"); return; }
+
+            const db = getGlobalDatabase();
+            db[uid] = "APPROVED";
+            saveGlobalDatabase(db);
+            input.value = "";
+            alertToast(`✅ UID ${uid} explicitly whitelisted!`);
+        }
+
+        function modifyUIDState(uid, action) {
+            const db = getGlobalDatabase();
+            if(action === "DELETE") {
+                delete db[uid];
+                alertToast(`🗑️ Erased node logs for UID ${uid}`);
+            } else {
+                db[uid] = action;
+                alertToast(`⚡ Status Lock updated: ${uid} -> ${action}`);
+            }
+            saveGlobalDatabase(db);
+        }
+
+        function clearAllRegistries() {
+            if(confirm("🚨 WARNING: This will immediately drop ALL active sessions and locks. Proceed?")) {
+                saveGlobalDatabase({});
+                alertToast("💥 Global structural lookup databases wiped.");
+            }
+        }
+
+        function rebuildInterface() {
+            const container = document.getElementById('admin-queue-container');
+            if(!container) return;
+            container.innerHTML = "";
+            
+            const db = getGlobalDatabase();
+            const keys = Object.keys(db).reverse();
+
+            if(keys.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-600 text-xs py-8 font-mono uppercase">No active queue packets listening</div>`;
+                return;
+            }
+
+            keys.forEach(uid => {
+                const status = db[uid];
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-slate-950 p-3.5 rounded-xl border border-slate-900 font-mono text-xs";
+                
+                let controls = "";
+                if(status === "PENDING") {
+                    controls = `
+                        <div class="flex gap-1.5">
+                            <button onclick="modifyUIDState('${uid}', 'APPROVED')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded font-bold text-[11px]">APPROVE</button>
+                            <button onclick="modifyUIDState('${uid}', 'REJECTED')" class="bg-rose-500/20 text-rose-400 border border-rose-500/40 px-2.5 py-1 rounded font-bold text-[11px]">BAN</button>
+                        </div>
+                    `;
+                } else {
+                    const clr = status === "APPROVED" ? "text-emerald-400" : "text-rose-500";
+                    controls = `
+                        <div class="flex items-center gap-3">
+                            <span class="font-bold uppercase tracking-wider text-[11px] ${clr}">${status}</span>
+                            <button onclick="modifyUIDState('${uid}', 'PENDING')" class="text-slate-500 hover:text-slate-300 underline text-[10px]">RESET</button>
+                            <button onclick="modifyUIDState('${uid}', 'DELETE')" class="text-rose-700 hover:text-rose-500 font-bold text-[11px]">✕</button>
+                        </div>
+                    `;
+                }
+
+                row.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="font-digital text-cyan-400 text-sm font-bold tracking-wider">${uid}</span>
+                        <span class="text-[8px] text-slate-500 tracking-widest mt-0.5 uppercase">Network Security Packet</span>
+                    </div>
+                    ${controls}
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function alertToast(msg) {
+            const toast = document.getElementById('toast-notify');
+            if(!toast) return;
+            toast.innerText = msg;
+            toast.style.opacity = "1";
+            setTimeout(() => toast.style.opacity = "0", 2500);
+        }
+
+        // Cross-window listening for seamless real-time syncing
+        window.addEventListener('storage', rebuildInterface);
+        window.onload = rebuildInterface;
+    </script>
+</body>
+</html>
+
