@@ -37,9 +37,14 @@
     </div>
 
     <script>
+        // MASTER CONFIGURATION TOKEN
+        const MASTER_ADMIN_TOKEN = "HACKII@786"; 
+
         const LOOP_SECONDS = 180;
         let activeBlockIndex = -1;
         let isUIVisualStateWait = false;
+        
+        // Views can be: "LOGIN", "DASHBOARD", "ADMIN"
         let currentActiveView = "LOGIN"; 
         let sessionVerifiedUID = ""; 
         let baseLiveCount = 42850;
@@ -53,16 +58,13 @@
             localStorage.setItem('HACKII_GLOBAL_UID_STORE', JSON.stringify(db));
         }
 
-        // CRITICAL ENFORCEMENT: Anti-Bypass Structural Wall
-        function checkSessionIntegrity() {
+        // BACKEND PROTECTION FIREWALL
+        function checkGateIntegrity() {
             const db = getSecureDatabase();
             if (currentActiveView === "DASHBOARD") {
-                // If dashboard is active but session UID is empty, or manipulated, force kill session
                 if (!sessionVerifiedUID || !db[sessionVerifiedUID] || db[sessionVerifiedUID] !== "APPROVED") {
                     sessionVerifiedUID = "";
                     currentActiveView = "LOGIN";
-                    alert("🛑 SECURITY VIOLATION: Unauthorized Route Detected! Session Blocked.");
-                    window.location.reload();
                     return false;
                 }
             }
@@ -70,16 +72,20 @@
         }
 
         function renderSystemActiveView() {
-            // Run inspection check before printing anything on screen
-            if(!checkSessionIntegrity()) return;
+            if(!checkGateIntegrity() && currentActiveView !== "ADMIN") {
+                currentActiveView = "LOGIN";
+            }
 
             const wrapper = document.getElementById('app-view-wrapper');
             
+            // ==========================================
+            // 1. LOGIN GATEWAY VIEW
+            // ==========================================
             if (currentActiveView === "LOGIN") {
                 wrapper.innerHTML = `
                     <div class="w-full flex justify-between items-center z-10">
-                        <span class="text-[10px] font-mono tracking-widest text-slate-800 uppercase">SYS_FIREWALL_v5.5</span>
-                        <a href="https://t.me/hackii_sureshote" target="_blank" class="glass-card px-3 py-1 rounded-xl border border-purple-900/30 text-xs text-purple-400 font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
+                        <span class="text-[10px] font-mono tracking-widest text-slate-800 uppercase">TOKEN_CORE_v6.0</span>
+                        <a href="https://t.me/hackii_sureshote" target="_blank" class="glass-card px-3 py-1 rounded-xl border border-purple-900/30 text-xs text-purple-400 font-bold flex items-center gap-1.5 shadow-sm">
                             <span class="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse"></span> TELEGRAM
                         </a>
                     </div>
@@ -87,7 +93,7 @@
                     <div class="w-full flex flex-col items-center gap-6 my-auto z-10 max-w-md mx-auto">
                         <div class="text-center">
                             <h1 class="text-4xl font-black tracking-tighter hackii-glow font-digital uppercase">HACKII PANEL 100K</h1>
-                            <p class="text-[10px] text-cyan-400 font-mono tracking-[0.3em] uppercase mt-1">SECURE ACCESS GATEWAY</p>
+                            <p class="text-[10px] text-cyan-400 font-mono tracking-[0.3em] uppercase mt-1">SECURE TOKEN GATEWAY</p>
                         </div>
 
                         <div class="w-full grid grid-cols-2 gap-3">
@@ -102,13 +108,13 @@
                         </div>
 
                         <div class="w-full glass-card p-5 rounded-3xl border border-slate-800/80 shadow-2xl relative overflow-hidden neon-box">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 font-mono">ENTER YOUR UNIQUE ID (UID):</label>
-                            <input type="text" id="user-uid-field" maxlength="15" placeholder="Enter UID Number..." 
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 font-mono">ENTER UNIQUE ID (UID):</label>
+                            <input type="text" id="user-uid-field" placeholder="Enter UID..." 
                                 class="w-full bg-slate-950 border border-slate-800/80 rounded-xl px-4 py-3.5 text-center font-digital text-xl tracking-widest text-cyan-400 focus:outline-none focus:border-cyan-500/50 transition-all mb-4">
                             
                             <button onclick="processSecureAuthValidation()" 
-                                class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black tracking-widest uppercase py-3.5 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] font-mono">
-                                VERIFY & LOGIN
+                                class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black tracking-widest uppercase py-3.5 rounded-xl font-mono">
+                                VERIFY ACCESS
                             </button>
 
                             <div class="w-full flex justify-between items-center mt-5 pt-4 border-t border-slate-900/60 text-[11px] font-mono">
@@ -117,16 +123,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="w-full text-center text-[9px] text-slate-700 font-mono tracking-widest z-10 uppercase">UNAUTHORIZED ATTEMPTS ARE LOGGED HACKII SHIELD</div>
+                    <div class="w-full text-center text-[9px] text-slate-700 font-mono tracking-widest z-10 uppercase">HACKII TOKEN ISOLATION SYSTEM ACTIVE</div>
                 `;
             } 
             
+            // ==========================================
+            // 2. APKA ORIGINAL DASHBOARD VIEW
+            // ==========================================
             else if (currentActiveView === "DASHBOARD") {
                 wrapper.innerHTML = `
                     <header class="w-full flex justify-between items-center z-10 pt-1 shrink-0">
                         <div>
                             <h1 class="text-3xl font-black tracking-tighter hackii-glow font-digital">HACKII PANEL 100K</h1>
-                            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">FIREWALL STATE: ENFORCED</p>
+                            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">STATUS: VERIFIED LOOP</p>
                         </div>
                         <div class="glass-card px-3 py-1 rounded-xl border border-slate-800">
                             <span id="live-clock" class="font-digital text-xs text-cyan-400 tracking-wider">00:00:00 PM</span>
@@ -167,7 +176,7 @@
                                 </div>
                             </div>
                             <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-3.5 mt-2">
-                                <span id="sync-status" class="text-emerald-400 flex items-center gap-1"><span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> HARDWARE VERIFIED</span>
+                                <span id="sync-status" class="text-emerald-400 flex items-center gap-1"><span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> LOGIC SECURE</span>
                                 <span id="last-update">ACTIVE BLOCK</span>
                             </div>
                         </div>
@@ -187,6 +196,43 @@
                 activeBlockIndex = -1; 
                 executeImmediatePreLogRenders();
             }
+
+            // ==========================================
+            // 3. SECRET MASTER ADMIN CONTROL VIEW
+            // ==========================================
+            else if (currentActiveView === "ADMIN") {
+                wrapper.innerHTML = `
+                    <div class="w-full max-w-md mx-auto flex flex-col gap-5 h-full overflow-hidden justify-start pt-2">
+                        <div class="flex justify-between items-center border-b border-purple-900/40 pb-3">
+                            <div>
+                                <h1 class="text-2xl font-black tracking-tight text-purple-400 font-digital">HACKII MASTER CONTROL</h1>
+                                <p class="text-[9px] text-slate-500 font-mono uppercase tracking-widest">Token Mode Authorization</p>
+                            </div>
+                            <button onclick="routeBackToLoginScreen()" class="bg-rose-950/60 border border-rose-800/50 text-rose-400 px-2.5 py-1 rounded text-[10px] font-mono font-bold">EXIT PANEL</button>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-2xl shadow-xl shrink-0">
+                            <h2 class="text-[10px] font-bold text-slate-400 font-mono uppercase tracking-widest mb-2.5">FORCE WHITELIST NEW UID</h2>
+                            <div class="flex gap-2">
+                                <input type="text" id="manual-uid-input" placeholder="Enter member UID..."
+                                    class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 font-digital text-cyan-400 text-center tracking-widest focus:outline-none focus:border-purple-500 text-sm">
+                                <button onclick="addManualApprovedUID()" class="bg-purple-600 hover:bg-purple-500 text-slate-950 font-bold px-4 rounded-xl font-mono text-xs tracking-wider">
+                                    ALLOW
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-2xl flex-1 flex flex-col shadow-2xl overflow-hidden mb-2">
+                            <div class="flex justify-between items-center mb-3 border-b border-slate-900/60 pb-2 shrink-0">
+                                <span class="text-[10px] font-bold text-slate-400 font-mono uppercase tracking-wider">LIVE REQUEST LOGS:</span>
+                                <button onclick="clearAllRegistries()" class="text-[9px] text-rose-500 hover:underline font-mono uppercase">Wipe System</button>
+                            </div>
+                            <div id="admin-queue-container" class="flex flex-col gap-2 overflow-y-auto pr-1 flex-1"></div>
+                        </div>
+                    </div>
+                `;
+                rebuildAdminInterface();
+            }
         }
 
         function processSecureAuthValidation() {
@@ -194,7 +240,17 @@
             const targetUID = field ? field.value.trim() : "";
 
             if (!targetUID) {
-                showNotificationToast("⚠️ Input missing: Enter UID node!");
+                showNotificationToast("⚠️ Please enter a UID node!");
+                return;
+            }
+
+            // CHECK INJECTED TOKENS: Open Admin if master token matches
+            if (targetUID === MASTER_ADMIN_TOKEN) {
+                showNotificationToast("🔑 Token Match! Initializing Admin Control Room...");
+                setTimeout(() => {
+                    currentActiveView = "ADMIN";
+                    renderSystemActiveView();
+                }, 800);
                 return;
             }
 
@@ -203,28 +259,113 @@
             if (!db.hasOwnProperty(targetUID)) {
                 db[targetUID] = "PENDING";
                 setSecureDatabase(db);
-                showNotificationToast("⏳ Enqueued! Token is locked pending admin approval.");
+                showNotificationToast("⏳ Enqueued! Request locked pending admin authorization.");
                 return;
             }
 
             if (db[targetUID] === "PENDING") {
-                showNotificationToast("🛑 Hold state: Admin verification check incomplete.");
+                showNotificationToast("🛑 Pending: Access not verified by panel admin yet.");
                 return;
             }
 
             if (db[targetUID] === "REJECTED") {
-                showNotificationToast("❌ Access Revoked: Selected UID node is banned.");
+                showNotificationToast("❌ Access Denied: This UID has been banned.");
                 return;
             }
 
             if (db[targetUID] === "APPROVED") {
-                sessionVerifiedUID = targetUID; // Bind Token securely
-                showNotificationToast("✅ Node Match! Injecting runtime variables...");
+                sessionVerifiedUID = targetUID; 
+                showNotificationToast("✅ Node Approved! Launching live cores...");
                 setTimeout(() => {
                     currentActiveView = "DASHBOARD";
                     renderSystemActiveView();
                 }, 800);
             }
+        }
+
+        // ==========================================
+        // ADMIN UTILITY CONTROLS
+        // ==========================================
+        function addManualApprovedUID() {
+            const input = document.getElementById('manual-uid-input');
+            const uid = input.value.trim();
+            if(!uid) { showNotificationToast("⚠️ Error: Field is empty!"); return; }
+
+            const db = getSecureDatabase();
+            db[uid] = "APPROVED";
+            setSecureDatabase(db);
+            input.value = "";
+            showNotificationToast(`✅ Manual Whitelist Saved: UID ${uid}`);
+            rebuildAdminInterface();
+        }
+
+        function modifyUIDState(uid, action) {
+            const db = getSecureDatabase();
+            if(action === "DELETE") {
+                delete db[uid];
+                showNotificationToast(`🗑️ Erased logs for UID ${uid}`);
+            } else {
+                db[uid] = action;
+                showNotificationToast(`⚡ System Lock: ${uid} -> ${action}`);
+            }
+            setSecureDatabase(db);
+            rebuildAdminInterface();
+        }
+
+        function clearAllRegistries() {
+            if(confirm("🚨 Purge the entire storage? All logged sessions will expire.")) {
+                setSecureDatabase({});
+                showNotificationToast("💥 Structural database dropped.");
+                rebuildAdminInterface();
+            }
+        }
+
+        function rebuildAdminInterface() {
+            if (currentActiveView !== "ADMIN") return;
+            const container = document.getElementById('admin-queue-container');
+            if(!container) return;
+            container.innerHTML = "";
+            
+            const db = getSecureDatabase();
+            const keys = Object.keys(db).reverse();
+
+            if(keys.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-600 text-xs py-8 font-mono uppercase">Queue empty. No active logs.</div>`;
+                return;
+            }
+
+            keys.forEach(uid => {
+                const status = db[uid];
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-900 font-mono text-xs shrink-0";
+                
+                let controls = "";
+                if(status === "PENDING") {
+                    controls = `
+                        <div class="flex gap-1.5">
+                            <button onclick="modifyUIDState('${uid}', 'APPROVED')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded font-bold text-[10px]">ALLOW</button>
+                            <button onclick="modifyUIDState('${uid}', 'REJECTED')" class="bg-rose-500/20 text-rose-400 border border-rose-500/40 px-2 py-0.5 rounded font-bold text-[10px]">BAN</button>
+                        </div>
+                    `;
+                } else {
+                    const clr = status === "APPROVED" ? "text-emerald-400" : "text-rose-500";
+                    controls = `
+                        <div class="flex items-center gap-2.5">
+                            <span class="font-bold uppercase tracking-wider text-[10px] ${clr}">${status}</span>
+                            <button onclick="modifyUIDState('${uid}', 'PENDING')" class="text-slate-500 underline text-[9px]">RESET</button>
+                            <button onclick="modifyUIDState('${uid}', 'DELETE')" class="text-rose-700 font-bold text-[10px]">✕</button>
+                        </div>
+                    `;
+                }
+
+                row.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="font-digital text-cyan-400 text-xs font-bold tracking-wider">${uid}</span>
+                    </div>
+                    ${controls}
+                `;
+                container.appendChild(row);
+            });
         }
 
         function routeBackToLoginScreen() {
@@ -233,9 +374,16 @@
             renderSystemActiveView();
         }
 
+        // ==========================================
+        // 3-MIN LIVE RUNTIME CLOCK ENGINE
+        // ==========================================
         function runSystemGlobalClock() {
-            // Live Integrity checks during active loop iteration
-            if (!checkSessionIntegrity()) return;
+            if (!checkGateIntegrity() && currentActiveView !== "ADMIN") {
+                if(currentActiveView === "DASHBOARD") {
+                    currentActiveView = "LOGIN";
+                    renderSystemActiveView();
+                }
+            }
 
             const timeObj = new Date();
             const liveClockNode = document.getElementById('live-clock');
@@ -370,8 +518,7 @@
 
                 if (iterations > 14) {
                     clearInterval(scrollInterval);
-                    // Check authentication again right at execution delivery point!
-                    if(!checkSessionIntegrity()) return;
+                    if(!checkGateIntegrity()) return;
 
                     cells[0].innerText = dataObj.digit1;
                     cells[1].innerText = dataObj.digit2;
@@ -436,6 +583,7 @@
             toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
+        // BACKGROUND BACKGROUND PARTICLES
         const canvas = document.getElementById('matrixDust');
         const ctx = canvas.getContext('2d');
         let dustArray = [];
@@ -452,6 +600,7 @@
         function loopAnimation() { ctx.clearRect(0, 0, canvas.width, canvas.height); dustArray.forEach(d => { d.slide(); d.render(); }); requestAnimationFrame(loopAnimation); }
 
         window.onload = function() { createEngineDust(); loopAnimation(); renderSystemActiveView(); };
+        window.addEventListener('storage', rebuildAdminInterface);
     </script>
 </body>
 </html>
