@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ HACKII TWO-DIGIT ENGINE v5.0</title>
+    <title>⚡ HACKII SYNCHRONIZED ENGINE v6.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
@@ -52,7 +52,7 @@
             <h1 class="text-4xl font-black tracking-tighter hackii-glow font-digital">
                 HACKII
             </h1>
-            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Stream // Dual Analyzer</p>
+            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">1-Min Stream // Mono Sync Analyzer</p>
         </div>
         
         <div class="glass-card px-3 py-1 rounded-xl border border-slate-800">
@@ -83,25 +83,25 @@
         </div>
 
         <div class="glass-card p-6 rounded-3xl flex flex-col justify-between relative overflow-hidden border border-slate-800 neon-box">
-            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-5">ALIGNED STREAM MATRIX</span>
+            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-5">ALIGNED MONO MATRIX</span>
 
             <div class="grid grid-cols-2 gap-4 justify-center px-4">
                 
                 <div class="flex flex-col gap-2.5 items-center">
-                    <div id="digit-1" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-900/40 neon-digit">0</div>
-                    <span id="tag-1" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900">--</span>
+                    <div id="digit-1" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digit">0</div>
+                    <span id="tag-1" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
                 </div>
 
                 <div class="flex flex-col gap-2.5 items-center">
-                    <div id="digit-2" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-900/40 neon-digit">0</div>
-                    <span id="tag-2" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900">--</span>
+                    <div id="digit-2" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digit">0</div>
+                    <span id="tag-2" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
                 </div>
 
             </div>
 
             <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-4 mt-6">
                 <span id="sync-status" class="text-emerald-400 flex items-center gap-1">
-                    <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Live Safe Algorithmic State
+                    <span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Live Mono Synchronized State
                 </span>
                 <span id="last-update">Secured</span>
             </div>
@@ -121,7 +121,7 @@
     </footer>
 
     <script>
-        const LOOP_SECONDS = 60; // Exact 1 Minute Sync Loop
+        const LOOP_SECONDS = 60; // Pure 1-Minute Sync Loop
         let activeBlockIndex = -1;
 
         // 1. CLOCK SYNCHRONIZATION RUNNER
@@ -135,7 +135,7 @@
         }
         setInterval(triggerClockPipeline, 1000);
 
-        // 2. MATHEMATICAL 1-MINUTE TIME BLOCK CALCULATIONS (REFRESH SAFE)
+        // 2. MATHEMATICAL 1-MINUTE TIME BLOCK CALCULATIONS (REFRESH SAFE & MONO-SYNC)
         function extractDynamicMetrics() {
             const now = new Date();
             
@@ -149,18 +149,15 @@
             const activeBlockId = Math.floor(deltaSeconds / LOOP_SECONDS);
             const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
 
-            // Compute exactly 2 independent stable digits from time seed
-            const finalDigits = [];
-            for (let i = 1; i <= 2; i++) {
-                const combinedSeed = (activeBlockId + 1) * (i * 73) + baseReset.getDate() * 131;
-                const trigValue = Math.abs(Math.sin(combinedSeed) * 8000) % 10;
-                finalDigits.push(Math.floor(trigValue));
-            }
+            // Compute exactly ONE stable single digit for the entire page to synchronize everything
+            const combinedSeed = (activeBlockId + 1) * 137 + baseReset.getDate() * 241;
+            const trigValue = Math.abs(Math.sin(combinedSeed) * 9000) % 10;
+            const synchronizedSingleDigit = Math.floor(trigValue);
 
             return {
                 blockID: activeBlockId + 1,
                 countdown: countdownRemaining,
-                digits: finalDigits
+                singleDigit: synchronizedSingleDigit
             };
         }
 
@@ -181,15 +178,15 @@
             }
 
             if (activeBlockIndex !== data.blockID) {
-                executeEngineDraw(data.digits, data.blockID);
+                executeEngineDraw(data.singleDigit, data.blockID);
                 activeBlockIndex = data.blockID;
             }
         }
 
-        // 4. MATRIX SHUFFLE & BIG/SMALL CHARACTER ANALYZER
-        function executeEngineDraw(targetNumbers, seqId) {
+        // 4. MATRIX SHUFFLE & BIG/SMALL CHARACTER ANALYZER (TWIN LOCKED)
+        function executeEngineDraw(finalValue, seqId) {
             const statusNode = document.getElementById('sync-status');
-            statusNode.innerHTML = `⏳ Analyzing Stream Vectors...`;
+            statusNode.innerHTML = `⏳ Synchronizing Twin Streams...`;
             statusNode.className = "text-amber-400 font-mono";
 
             const cells = [
@@ -205,56 +202,61 @@
             cells.forEach(c => c.className = "w-full font-digital text-7xl font-black text-center text-slate-700 bg-slate-950/90 rounded-2xl py-5 border border-slate-900");
             tags.forEach(t => {
                 t.innerText = "ROLL";
-                t.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-950 text-slate-600";
+                t.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-950 text-slate-600 w-full text-center";
             });
 
             let iterations = 0;
             const scrollInterval = setInterval(() => {
+                // Dono boxes ek sath live random generate karenge roll state me
                 cells.forEach(c => c.innerText = Math.floor(Math.random() * 10));
                 iterations++;
 
                 if (iterations > 12) {
                     clearInterval(scrollInterval);
 
-                    targetNumbers.forEach((val, idx) => {
-                        cells[idx].innerText = val;
-                        cells[idx].className = "w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
-                        
-                        // Strict 0-4 Small, 5-9 Big Logic Parser
-                        if (val >= 5) {
-                            tags[idx].innerText = "BIG";
-                            tags[idx].className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 text-shadow-[0_0_10px_rgba(244,63,94,0.3)]";
+                    // Dono boxes me strictly wahi exact SAME logic apply hogi ek sath
+                    cells.forEach((cell) => {
+                        cell.innerText = finalValue;
+                        cell.className = "w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 text-shadow-[0_0_15px_rgba(16,185,129,0.4)]";
+                    });
+                    
+                    tags.forEach((tag) => {
+                        if (finalValue >= 5) {
+                            tag.innerText = "BIG";
+                            tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 text-shadow-[0_0_10px_rgba(244,63,94,0.3)] w-full text-center";
                         } else {
-                            tags[idx].innerText = "SMALL";
-                            tags[idx].className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400 text-shadow-[0_0_10px_rgba(6,182,212,0.3)]";
+                            tag.innerText = "SMALL";
+                            tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400 text-shadow-[0_0_10px_rgba(6,182,212,0.3)] w-full text-center";
                         }
                     });
 
                     const exactTime = new Date().toLocaleTimeString();
                     document.getElementById('last-update').innerText = `Synced: ${exactTime}`;
                     
-                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Matrix Synced`;
+                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> Mono Synced`;
                     statusNode.className = "text-emerald-400 flex items-center gap-1";
 
-                    compileHistoryLog(targetNumbers, exactTime);
+                    compileHistoryLog(finalValue, exactTime);
                 }
             }, 40);
         }
 
-        // 5. DATA HISTORY LOG COMPILER
-        function compileHistoryLog(numbersArray, timestamp) {
+        // 5. DATA HISTORY LOG COMPILER (SINGLE LOG INDEX)
+        function compileHistoryLog(singleVal, timestamp) {
             const container = document.getElementById('history-box');
             const row = document.createElement('div');
 
-            const computedTagsStr = numbersArray.map(v => v >= 5 ? `<span class="text-[10px] font-bold text-pink-400 px-1 bg-pink-950/20 rounded border border-pink-900/30">BIG</span>` : `<span class="text-[10px] font-bold text-cyan-400 px-1 bg-cyan-950/20 rounded border border-cyan-900/30">SMALL</span>`).join(" ");
+            const tagString = singleVal >= 5 ? 
+                `<span class="text-[10px] font-bold text-pink-400 px-2 bg-pink-950/20 rounded border border-pink-900/30">BIG</span>` : 
+                `<span class="text-[10px] font-bold text-cyan-400 px-2 bg-cyan-950/20 rounded border border-cyan-900/30">SMALL</span>`;
 
             row.className = "flex justify-between items-center bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-900/80";
             row.innerHTML = `
                 <div class="flex items-center gap-3">
                     <span class="text-[10px] text-slate-500 font-mono">${timestamp}</span>
-                    <div class="flex gap-1.5">${computedTagsStr}</div>
+                    <div>${tagString}</div>
                 </div>
-                <span class="font-digital font-black text-base text-emerald-400 tracking-[0.4em]">${numbersArray.join(" ")}</span>
+                <span class="font-digital font-black text-base text-emerald-400 tracking-widest">${singleVal} ${singleVal}</span>
             `;
 
             container.insertBefore(row, container.firstChild);
@@ -308,21 +310,19 @@
             loopAnimation();
             triggerClockPipeline();
 
-            // Auto-populates historical lines mathematically on refresh
+            // Historical structural items pre-render on direct refresh
             const initMetrics = extractDynamicMetrics();
             let baseID = initMetrics.blockID;
             for (let x = 1; x <= 3; x++) {
                 let checkBlock = baseID - x;
                 if (checkBlock > 0) {
-                    const historicalArray = [];
-                    for (let i = 1; i <= 2; i++) {
-                        const pastSeed = checkBlock * (i * 73) + new Date().getDate() * 131;
-                        historicalArray.push(Math.floor(Math.abs(Math.sin(pastSeed) * 8000) % 10));
-                    }
-                    compileHistoryLog(historicalArray, `Past Block -${x}m`);
+                    const pastSeed = checkBlock * 137 + new Date().getDate() * 241;
+                    const pastVal = Math.floor(Math.abs(Math.sin(pastSeed) * 9000) % 10);
+                    compileHistoryLog(pastVal, `Block -${x}m`);
                 }
             }
         };
     </script>
 </body>
 </html>
+
