@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ HACKII PANEL 100K</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #010206; overflow-x: hidden; touch-action: manipulation; }
+        .font-digital { font-family: 'Orbitron', sans-serif; }
+        .hackii-glow {
+            background: linear-gradient(45deg, #ff0055, #00ffcc, #9900ff, #ff0055);
+            background-size: 200% auto;
+            animation: moveGlow 4s linear infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
+        }
+        @keyframes moveGlow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        .glass-card { background: rgba(6, 10, 23, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-box { box-shadow: 0 0 35px rgba(6, 182, 212, 0.18); }
+        .neon-digit { text-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+        #alert-toast { transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: translateY(150%) translateX(-50%); }
+        #alert-toast.show { transform: translateY(0) translateX(-50%); }
+    </style>
+</head>
+<body class="text-slate-100 h-screen w-screen flex flex-col items-center justify-center p-4 relative select-none overflow-hidden">
+
+    <canvas id="matrixDust" class="absolute inset-0 pointer-events-none z-0"></canvas>
+
+    <div id="app-view-wrapper" class="w-full h-full absolute inset-0 z-10 flex flex-col justify-between p-6"></div>
+
+    <div id="alert-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] glass-card px-5 py-3 rounded-xl border border-cyan-500/30 text-xs font-mono text-cyan-300 font-medium shadow-2xl flex items-center gap-2 max-w-[90vw]">
+        <span id="toast-message">FIREWALL ACTIVE</span>
+    </div>
+
+    <script>
+        const LOOP_SECONDS = 180;
+        let activeBlockIndex = -1;
+        let isUIVisualStateWait = false;
+        let currentActiveView = "LOGIN"; 
+        let sessionVerifiedUID = ""; 
+        let baseLiveCount = 42850;
+        let toastTimeout;
+
+        function getSecureDatabase() {
+            return JSON.parse(localStorage.getItem('HACKII_GLOBAL_UID_STORE')) || {};
+        }
+
+        function setSecureDatabase(db) {
+            localStorage.setItem('HACKII_GLOBAL_UID_STORE', JSON.stringify(db));
+        }
+
+        // CRITICAL ENFORCEMENT: Anti-Bypass Structural Wall
+        function checkSessionIntegrity() {
+            const db = getSecureDatabase();
+            if (currentActiveView === "DASHBOARD") {
+                // If dashboard is active but session UID is empty, or manipulated, force kill session
+                if (!sessionVerifiedUID || !db[sessionVerifiedUID] || db[sessionVerifiedUID] !== "APPROVED") {
+                    sessionVerifiedUID = "";
+                    currentActiveView = "LOGIN";
+                    alert("🛑 SECURITY VIOLATION: Unauthorized Route Detected! Session Blocked.");
+                    window.location.reload();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function renderSystemActiveView() {
+            // Run inspection check before printing anything on screen
+            if(!checkSessionIntegrity()) return;
+
+            const wrapper = document.getElementById('app-view-wrapper');
+            
+            if (currentActiveView === "LOGIN") {
+                wrapper.innerHTML = `
+                    <div class="w-full flex justify-between items-center z-10">
+                        <span class="text-[10px] font-mono tracking-widest text-slate-800 uppercase">SYS_FIREWALL_v5.5</span>
+                        <a href="https://t.me/hackii_sureshote" target="_blank" class="glass-card px-3 py-1 rounded-xl border border-purple-900/30 text-xs text-purple-400 font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
+                            <span class="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse"></span> TELEGRAM
+                        </a>
+                    </div>
+
+                    <div class="w-full flex flex-col items-center gap-6 my-auto z-10 max-w-md mx-auto">
+                        <div class="text-center">
+                            <h1 class="text-4xl font-black tracking-tighter hackii-glow font-digital uppercase">HACKII PANEL 100K</h1>
+                            <p class="text-[10px] text-cyan-400 font-mono tracking-[0.3em] uppercase mt-1">SECURE ACCESS GATEWAY</p>
+                        </div>
+
+                        <div class="w-full grid grid-cols-2 gap-3">
+                            <div class="glass-card p-3 rounded-2xl border border-slate-900 text-center">
+                                <p class="text-[9px] font-mono text-slate-500 uppercase tracking-wider">LIVE MEMBERS</p>
+                                <p id="live-members-counter" class="font-digital text-lg font-bold text-emerald-400 tracking-wider">${baseLiveCount.toLocaleString('en-IN')}</p>
+                            </div>
+                            <div class="glass-card p-3 rounded-2xl border border-slate-900 text-center">
+                                <p class="text-[9px] font-mono text-slate-500 uppercase tracking-wider">TOTAL WINNINGS</p>
+                                <p class="font-digital text-lg font-bold text-amber-400 tracking-wider">₹1,50,48,200</p>
+                            </div>
+                        </div>
+
+                        <div class="w-full glass-card p-5 rounded-3xl border border-slate-800/80 shadow-2xl relative overflow-hidden neon-box">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 font-mono">ENTER YOUR UNIQUE ID (UID):</label>
+                            <input type="text" id="user-uid-field" maxlength="15" placeholder="Enter UID Number..." 
+                                class="w-full bg-slate-950 border border-slate-800/80 rounded-xl px-4 py-3.5 text-center font-digital text-xl tracking-widest text-cyan-400 focus:outline-none focus:border-cyan-500/50 transition-all mb-4">
+                            
+                            <button onclick="processSecureAuthValidation()" 
+                                class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black tracking-widest uppercase py-3.5 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] font-mono">
+                                VERIFY & LOGIN
+                            </button>
+
+                            <div class="w-full flex justify-between items-center mt-5 pt-4 border-t border-slate-900/60 text-[11px] font-mono">
+                                <span class="text-slate-500">No Account?</span>
+                                <a href="https://4yaarwin.com/#/register?invitationCode=18426755757" target="_blank" class="text-amber-400 font-bold hover:underline tracking-wide">REGISTER LINK 🔗</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full text-center text-[9px] text-slate-700 font-mono tracking-widest z-10 uppercase">UNAUTHORIZED ATTEMPTS ARE LOGGED HACKII SHIELD</div>
+                `;
+            } 
+            
+            else if (currentActiveView === "DASHBOARD") {
+                wrapper.innerHTML = `
+                    <header class="w-full flex justify-between items-center z-10 pt-1 shrink-0">
+                        <div>
+                            <h1 class="text-3xl font-black tracking-tighter hackii-glow font-digital">HACKII PANEL 100K</h1>
+                            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">FIREWALL STATE: ENFORCED</p>
+                        </div>
+                        <div class="glass-card px-3 py-1 rounded-xl border border-slate-800">
+                            <span id="live-clock" class="font-digital text-xs text-cyan-400 tracking-wider">00:00:00 PM</span>
+                        </div>
+                    </header>
+
+                    <main class="w-full flex flex-col gap-4 my-auto z-10 relative max-w-md mx-auto">
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800/80 shadow-lg">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">3-MIN LOOP SEQUENCE</span>
+                                <span id="loop-state-tag" class="text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE ROUND</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div id="countdown" class="font-digital text-4xl font-black text-amber-400 tracking-wider">03:00</div>
+                                <div class="text-[9px] text-slate-500 font-mono text-right uppercase">CYCLE TIMELINE<br><span class="text-slate-400 font-bold">1 MIN PLAY + 2 MIN SKIP</span></div>
+                            </div>
+                            <div class="w-full bg-slate-950 h-1.5 rounded-full mt-3 overflow-hidden border border-slate-900">
+                                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-yellow-400 h-full w-full transition-all duration-1000 ease-linear"></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-3xl min-h-[240px] flex flex-col justify-between relative overflow-hidden border border-slate-800/80 neon-box">
+                            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-2">OUTPUT CHANNELS</span>
+                            <div id="display-matrix-container" class="w-full py-2">
+                                <div id="active-slots-view" class="grid grid-cols-2 gap-4 justify-center px-2">
+                                    <div class="flex flex-col gap-2.5 items-center">
+                                        <div id="digit-1" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digit">0</div>
+                                        <span id="tag-1" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
+                                    </div>
+                                    <div class="flex flex-col gap-2.5 items-center">
+                                        <div id="digit-2" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digit">0</div>
+                                        <span id="tag-2" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
+                                    </div>
+                                </div>
+                                <div id="wait-state-view" class="hidden flex-col items-center justify-center py-6 text-center">
+                                    <div class="text-rose-500 font-digital text-2xl font-black tracking-widest animate-pulse mb-1">WAIT FOR NEXT ROUND</div>
+                                    <p class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">SKIPPING 2 ROUNDS // SYSTEM STANDBY</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900 pt-3.5 mt-2">
+                                <span id="sync-status" class="text-emerald-400 flex items-center gap-1"><span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> HARDWARE VERIFIED</span>
+                                <span id="last-update">ACTIVE BLOCK</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800/80">
+                            <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-2 block border-b border-slate-900 pb-1">CHRONO LOG INDEX</span>
+                            <div id="history-box" class="flex flex-col gap-2 max-h-[110px] overflow-y-auto"></div>
+                        </div>
+                    </main>
+
+                    <footer class="w-full flex justify-between items-center text-[9px] text-slate-700 font-mono tracking-widest shrink-0 pb-1 z-10 uppercase">
+                        <span>NODE ID: SECURE_AUTH_PASS</span>
+                        <span onclick="routeBackToLoginScreen()" class="text-rose-500 font-bold cursor-pointer hover:underline">DISCONNECT</span>
+                    </footer>
+                `;
+                isUIVisualStateWait = false; 
+                activeBlockIndex = -1; 
+                executeImmediatePreLogRenders();
+            }
+        }
+
+        function processSecureAuthValidation() {
+            const field = document.getElementById('user-uid-field');
+            const targetUID = field ? field.value.trim() : "";
+
+            if (!targetUID) {
+                showNotificationToast("⚠️ Input missing: Enter UID node!");
+                return;
+            }
+
+            const db = getSecureDatabase();
+
+            if (!db.hasOwnProperty(targetUID)) {
+                db[targetUID] = "PENDING";
+                setSecureDatabase(db);
+                showNotificationToast("⏳ Enqueued! Token is locked pending admin approval.");
+                return;
+            }
+
+            if (db[targetUID] === "PENDING") {
+                showNotificationToast("🛑 Hold state: Admin verification check incomplete.");
+                return;
+            }
+
+            if (db[targetUID] === "REJECTED") {
+                showNotificationToast("❌ Access Revoked: Selected UID node is banned.");
+                return;
+            }
+
+            if (db[targetUID] === "APPROVED") {
+                sessionVerifiedUID = targetUID; // Bind Token securely
+                showNotificationToast("✅ Node Match! Injecting runtime variables...");
+                setTimeout(() => {
+                    currentActiveView = "DASHBOARD";
+                    renderSystemActiveView();
+                }, 800);
+            }
+        }
+
+        function routeBackToLoginScreen() {
+            sessionVerifiedUID = "";
+            currentActiveView = "LOGIN";
+            renderSystemActiveView();
+        }
+
+        function runSystemGlobalClock() {
+            // Live Integrity checks during active loop iteration
+            if (!checkSessionIntegrity()) return;
+
+            const timeObj = new Date();
+            const liveClockNode = document.getElementById('live-clock');
+            if (liveClockNode && currentActiveView === "DASHBOARD") {
+                liveClockNode.innerText = timeObj.toLocaleTimeString('en-US', {
+                    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+                });
+            }
+
+            evaluateCustom3MinEngine();
+
+            if (currentActiveView === "LOGIN") {
+                if (Math.random() > 0.6) {
+                    baseLiveCount += Math.floor(Math.random() * 3) + 1;
+                    const liveNode = document.getElementById('live-members-counter');
+                    if(liveNode) liveNode.innerText = baseLiveCount.toLocaleString('en-IN');
+                }
+            }
+        }
+        setInterval(runSystemGlobalClock, 1000);
+
+        function calculateRealEngineMetrics(blockOffset = 0) {
+            const now = new Date();
+            let baseReset = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
+            if (now < baseReset) { baseReset.setDate(baseReset.getDate() - 1); }
+
+            const deltaSeconds = Math.floor((now - baseReset) / 1000);
+            const targetBlockId = Math.floor(deltaSeconds / LOOP_SECONDS) - blockOffset;
+            const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
+
+            const stepFactor = (targetBlockId + 1) * 4327 + baseReset.getDate() * 761;
+            const cryptoTrig = Math.abs(Math.sin(stepFactor)) * 100000;
+            
+            const smallWeight = Math.floor(48000 + (cryptoTrig % 7001));
+            const isBigDecision = (100000 - smallWeight) < smallWeight;
+
+            const digits = [];
+            for (let i = 1; i <= 2; i++) {
+                const finalSeed = stepFactor * (i * 401) + (isBigDecision ? 888 : 333);
+                const baseDigitResult = Math.floor(Math.abs(Math.cos(finalSeed) * 8500)) % 5;
+                digits.push(isBigDecision ? (baseDigitResult + 5) : baseDigitResult);
+            }
+
+            return {
+                blockID: targetBlockId + 1,
+                countdown: countdownRemaining,
+                digit1: digits[0],
+                digit2: digits[1],
+                isBig: isBigDecision
+            };
+        }
+
+        function evaluateCustom3MinEngine() {
+            if (currentActiveView !== "DASHBOARD") return;
+
+            const data = calculateRealEngineMetrics(0);
+            const countDisplay = document.getElementById('countdown');
+            if(!countDisplay) return;
+
+            const minutes = String(Math.floor(data.countdown / 60)).padStart(2, '0');
+            const seconds = String(data.countdown % 60).padStart(2, '0');
+            countDisplay.innerText = `${minutes}:${seconds}`;
+            
+            document.getElementById('progress-bar').style.width = `${(data.countdown / LOOP_SECONDS) * 100}%`;
+
+            if (data.countdown <= 120) {
+                if (!isUIVisualStateWait) triggerWaitPhaseUI();
+            } else {
+                if (isUIVisualStateWait) isUIVisualStateWait = false; 
+            }
+
+            if(data.countdown <= 15) {
+                countDisplay.className = "font-digital text-4xl font-black text-red-500 animate-pulse";
+            } else {
+                countDisplay.className = "font-digital text-4xl font-black text-amber-400";
+            }
+
+            if (activeBlockIndex !== data.blockID) {
+                executeVisualDrawSequence(data);
+                activeBlockIndex = data.blockID;
+            }
+        }
+
+        function triggerWaitPhaseUI() {
+            isUIVisualStateWait = true;
+            document.getElementById('active-slots-view').classList.add('hidden');
+            document.getElementById('wait-state-view').classList.remove('hidden');
+            document.getElementById('wait-state-view').classList.add('flex');
+            
+            const tagState = document.getElementById('loop-state-tag');
+            tagState.innerText = "WAIT PHASE";
+            tagState.className = "text-[10px] bg-rose-950/40 border border-rose-900/50 text-rose-400 px-1.5 py-0.5 rounded font-mono font-bold";
+
+            const statusNode = document.getElementById('sync-status');
+            statusNode.innerHTML = `🛑 SKIP MODE ACTIVATED`;
+            statusNode.className = "text-rose-400 font-mono";
+        }
+
+        function restoreActivePhaseUI() {
+            document.getElementById('wait-state-view').classList.add('hidden');
+            document.getElementById('wait-state-view').classList.remove('flex');
+            document.getElementById('active-slots-view').classList.remove('hidden');
+            
+            const tagState = document.getElementById('loop-state-tag');
+            tagState.innerText = "ACTIVE ROUND";
+            tagState.className = "text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold";
+        }
+
+        function executeVisualDrawSequence(dataObj) {
+            restoreActivePhaseUI();
+            const statusNode = document.getElementById('sync-status');
+            if(!statusNode) return;
+            statusNode.innerHTML = `⏳ VERIFYING MEMORY GRID...`;
+            statusNode.className = "text-amber-400 font-mono";
+
+            const cells = [document.getElementById('digit-1'), document.getElementById('digit-2')];
+            const tags = [document.getElementById('tag-1'), document.getElementById('tag-2')];
+
+            cells.forEach(c => c.className = "w-full font-digital text-7xl font-black text-center text-slate-700 bg-slate-950/90 rounded-2xl py-5 border border-slate-900");
+            tags.forEach(t => {
+                t.innerText = "LOAD";
+                t.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-950 text-slate-600 w-full text-center";
+            });
+
+            let iterations = 0;
+            const scrollInterval = setInterval(() => {
+                const cryptoBuffer = new Uint32Array(2);
+                window.crypto.getRandomValues(cryptoBuffer);
+                cells[0].innerText = cryptoBuffer[0] % 10;
+                cells[1].innerText = cryptoBuffer[1] % 10;
+                iterations++;
+
+                if (iterations > 14) {
+                    clearInterval(scrollInterval);
+                    // Check authentication again right at execution delivery point!
+                    if(!checkSessionIntegrity()) return;
+
+                    cells[0].innerText = dataObj.digit1;
+                    cells[1].innerText = dataObj.digit2;
+
+                    cells.forEach(cell => {
+                        cell.className = "w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20";
+                    });
+                    
+                    tags.forEach(tag => {
+                        if (dataObj.isBig) {
+                            tag.innerText = "BIG";
+                            tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-pink-950/40 border border-pink-900/50 text-pink-400 w-full text-center";
+                        } else {
+                            tag.innerText = "SMALL";
+                            tag.className = "text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-cyan-950/40 border border-cyan-900/50 text-cyan-400 w-full text-center";
+                        }
+                    });
+
+                    const exactTime = new Date().toLocaleTimeString();
+                    document.getElementById('last-update').innerText = `SYNCED: ${exactTime}`;
+                    statusNode.innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> LOGIC SECURE`;
+                    statusNode.className = "text-emerald-400 flex items-center gap-1";
+
+                    compileHistoryDatabaseLog(dataObj, exactTime);
+                }
+            }, 40);
+        }
+
+        function compileHistoryDatabaseLog(dataObj, timestamp) {
+            const container = document.getElementById('history-box');
+            if(!container) return;
+            const row = document.createElement('div');
+            const clrText = dataObj.isBig ? `bg-pink-950/20 border-pink-900/40 text-pink-400` : `bg-cyan-950/20 border-cyan-900/40 text-cyan-400`;
+            const labelText = dataObj.isBig ? "BIG" : "SMALL";
+
+            row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-900/80";
+            row.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-slate-500 font-mono">${timestamp}</span>
+                    <div class="text-[9px] font-bold px-2 py-0.5 rounded border ${clrText}">${labelText}</div>
+                </div>
+                <span class="font-digital font-black text-sm text-emerald-400 tracking-[0.4em]">${dataObj.digit1}${dataObj.digit2}</span>
+            `;
+            container.insertBefore(row, container.firstChild);
+            if(container.children.length > 4) container.removeChild(container.lastChild);
+        }
+
+        function executeImmediatePreLogRenders() {
+            for (let x = 1; x <= 3; x++) {
+                const pastData = calculateRealEngineMetrics(x);
+                if (pastData.blockID > 0) compileHistoryDatabaseLog(pastData, `PAST -${x*3}M`);
+            }
+        }
+
+        function showNotificationToast(msg) {
+            const toast = document.getElementById('alert-toast');
+            const targetNode = document.getElementById('toast-message');
+            if(!toast || !targetNode) return;
+            targetNode.innerText = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        const canvas = document.getElementById('matrixDust');
+        const ctx = canvas.getContext('2d');
+        let dustArray = [];
+        function setBoundaries() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', setBoundaries);
+        setBoundaries();
+
+        class Dust {
+            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.speed = Math.random() * 0.12 + 0.04; }
+            slide() { this.y += this.speed; if(this.y > canvas.height) this.y = 0; }
+            render() { ctx.fillStyle = 'rgba(153, 0, 255, 0.07)'; ctx.fillRect(this.x, this.y, 1.2, 1.2); }
+        }
+        function createEngineDust() { for(let i = 0; i < 35; i++) dustArray.push(new Dust()); }
+        function loopAnimation() { ctx.clearRect(0, 0, canvas.width, canvas.height); dustArray.forEach(d => { d.slide(); d.render(); }); requestAnimationFrame(loopAnimation); }
+
+        window.onload = function() { createEngineDust(); loopAnimation(); renderSystemActiveView(); };
+    </script>
+</body>
+</html>
