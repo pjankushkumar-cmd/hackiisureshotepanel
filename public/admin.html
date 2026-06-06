@@ -47,76 +47,124 @@
     </div>
 
     <script>
-        function fetchQueue() {
-            fetch('/api/admin/fetch-records')
+        <div class="w-full max-w-lg mt-2 flex flex-col gap-5 h-[92vh]">
+    <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+        <div>
+            <h1 class="text-xl font-black text-purple-400 font-digital uppercase tracking-wide">SERVER CONTROL NODE</h1>
+            <p class="text-[9px] text-slate-500 font-mono tracking-widest">LIVE DATA SYNCHRONIZATION RUNNING</p>
+        </div>
+        <button onclick="exitTerminal()" class="bg-rose-950/80 border border-rose-800/50 text-rose-400 px-3 py-1 rounded text-xs font-mono font-bold">CLOSE DESK</button>
+    </div>
+
+    <div class="premium-card p-4 rounded-2xl shadow-xl">
+        <h2 class="text-[10px] font-bold text-slate-400 font-mono tracking-widest uppercase mb-2">FORCE MANUALLY APPROVE NEW UID</h2>
+        <div class="flex gap-2">
+            <input type="text" id="manual-uid" placeholder="ENTER MEMBER UID..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 font-digital text-cyan-400 text-center tracking-widest text-sm focus:outline-none uppercase">
+            <button onclick="addNode()" class="bg-purple-600 hover:bg-purple-500 text-slate-950 font-bold px-5 rounded-xl font-mono text-xs uppercase">GRANT</button>
+            <button onclick="addNoRecharge()" class="bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold px-5 rounded-xl font-mono text-xs uppercase">NO RECHARGE</button>
+        </div>
+    </div>
+
+    <div class="premium-card p-4 rounded-2xl flex-1 flex flex-col overflow-hidden">
+        <div class="flex justify-between items-center mb-3 border-b border-slate-900 pb-2">
+            <span class="text-[10px] font-bold text-slate-400 font-mono uppercase tracking-wider">LIVE DATA QUEUE STREAM:</span>
+            <button onclick="clearAll()" class="text-[9px] text-rose-500 hover:underline font-mono uppercase font-bold">WIPE STACK</button>
+        </div>
+        <div id="queue-box" class="flex flex-col gap-2 overflow-y-auto pr-1 flex-1"></div>
+    </div>
+</div>
+
+<script>
+    // Logic Section with Error Handling
+    function fetchQueue() {
+        fetch('/api/admin/fetch-records')
             .then(res => res.json())
-            .then(data => renderUi(data));
-        }
+            .then(data => renderUi(data))
+            .catch(err => console.error('Fetch Error:', err));
+    }
 
-        function updateState(uid, action) {
-            fetch('/api/admin/modify-state', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uid, action })
-            })
+    function updateState(uid, action) {
+        fetch('/api/admin/modify-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid, action })
+        })
+        .then(res => res.json())
+        .then(data => renderUi(data.payload))
+        .catch(err => console.error('Update Error:', err));
+    }
+
+    function addNode() {
+        const input = document.getElementById('manual-uid');
+        const uid = input.value.trim().toUpperCase();
+        if(!uid) return;
+        updateState(uid, 'ALLOW');
+        input.value = "";
+    }
+
+    function addNoRecharge() {
+        const input = document.getElementById('manual-uid');
+        const uid = input.value.trim().toUpperCase();
+        if(!uid) return;
+        updateState(uid, 'NO_RECHARGE');
+        input.value = "";
+    }
+
+    function clearAll() {
+        if(confirm("🚨 CRITICAL ALERT: Drop all server registries permanently?")) {
+            fetch('/api/admin/clear-all', { method: 'POST' })
             .then(res => res.json())
-            .then(data => renderUi(data.payload));
+            .then(data => renderUi(data.payload))
+            .catch(err => console.error('Clear All Error:', err));
         }
+    }
 
-        function addNode() {
-            const input = document.getElementById('manual-uid');
-            const uid = input.value.trim().toUpperCase();
-            if(!uid) return;
-            updateState(uid, 'ALLOW');
-            input.value = "";
-        }
+    function renderUi(db) {
+        if (!db) return; // Safety check
 
-        function clearAll() {
-            if(confirm("🚨 CRITICAL ALERT: Drop all server registries permanently?")) {
-                fetch('/api/admin/clear-all', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => renderUi(data.payload));
-            }
-        }
+        const box = document.getElementById('queue-box');
+        box.innerHTML = ""; 
 
-        function renderUi(db) {
-            const box = document.getElementById('queue-box');
-            box.innerHTML = "";
+        // 1. Pending Requests (Safe rendering)
+        (db.PENDING_REQUESTS || []).forEach(uid => {
+            createRow(box, uid, ` 
+                <div class="flex gap-1.5"> 
+                    <button onclick="updateState('${uid}', 'ALLOW')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded text-[10px] font-bold">ALLOW</button> 
+                    <button onclick="updateState('${uid}', 'BAN')" class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-0.5 rounded text-[10px] font-bold">BAN</button> 
+                    <button onclick="updateState('${uid}', 'NO_RECHARGE')" class="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2.5 py-0.5 rounded text-[10px] font-bold">NO RECHARGE</button>
+                </div> 
+            `);
+        });
 
-            // Handle Pending Requests rendering
-            db.PENDING_REQUESTS.forEach(uid => {
-                createRow(box, uid, `
-                    <div class="flex gap-1.5">
-                        <button onclick="updateState('${uid}', 'ALLOW')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded text-[10px] font-bold">ALLOW</button>
-                        <button onclick="updateState('${uid}', 'BAN')" class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-0.5 rounded text-[10px] font-bold">BAN</button>
-                    </div>
-                `);
-            });
+        // 2. Approved Users
+        Object.keys(db.APPROVED_UID_REGISTRY || {}).forEach(uid => {
+            createRow(box, uid, `<div class="flex items-center gap-2"><span class="text-emerald-400 font-bold text-[10px] uppercase">APPROVED</span><button onclick="updateState('${uid}', 'DELETE')" class="text-rose-800 font-bold ml-1 text-sm">✕</button></div>`);
+        });
 
-            // Handle Approved Users rendering
-            Object.keys(db.APPROVED_UID_REGISTRY).forEach(uid => {
-                createRow(box, uid, `<div class="flex items-center gap-2"><span class="text-emerald-400 font-bold text-[10px] uppercase">APPROVED</span><button onclick="updateState('${uid}', 'DELETE')" class="text-rose-800 font-bold ml-1 text-sm">✕</button></div>`);
-            });
+        // 3. No Recharge Users
+        Object.keys(db.NO_RECHARGE_REGISTRY || {}).forEach(uid => {
+            createRow(box, uid, `<div class="flex items-center gap-2"><span class="text-cyan-400 font-bold text-[10px] uppercase">NO RECHARGE</span><button onclick="updateState('${uid}', 'DELETE')" class="text-rose-800 font-bold ml-1 text-sm">✕</button></div>`);
+        });
 
-            // Handle Banned Users rendering
-            Object.keys(db.BANNED_REGISTRY).forEach(uid => {
-                createRow(box, uid, `<div class="flex items-center gap-2"><span class="text-rose-500 font-bold text-[10px] uppercase">BANNED</span><button onclick="updateState('${uid}', 'DELETE')" class="text-rose-800 font-bold ml-1 text-sm">✕</button></div>`);
-            });
-        }
+        // 4. Banned Users
+        Object.keys(db.BANNED_REGISTRY || {}).forEach(uid => {
+            createRow(box, uid, `<div class="flex items-center gap-2"><span class="text-rose-500 font-bold text-[10px] uppercase">BANNED</span><button onclick="updateState('${uid}', 'DELETE')" class="text-rose-800 font-bold ml-1 text-sm">✕</button></div>`);
+        });
+    }
 
-        function createRow(parent, uid, htmlActions) {
-            const el = document.createElement('div');
-            el.className = "flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-900 text-xs font-mono shrink-0 animate-fade";
-            el.innerHTML = `<div><span class="font-digital text-cyan-400 text-xs tracking-wider">${uid}</span></div>${htmlActions}`;
-            parent.appendChild(el);
-        }
+    function createRow(parent, uid, htmlActions) {
+        const el = document.createElement('div');
+        el.className = "flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-900 text-xs font-mono shrink-0 animate-fade";
+        el.innerHTML = `<div><span class="font-digital text-cyan-400 text-xs tracking-wider">${uid}</span></div>${htmlActions}`;
+        parent.appendChild(el);
+    }
 
-        function exitTerminal() {
-            sessionStorage.removeItem('ADM_AUTH_SESSION');
-            window.location.href = "index.html";
-        }
+    function exitTerminal() {
+        sessionStorage.removeItem('ADM_AUTH_SESSION');
+        window.location.href = "index.html";
+    }
 
-        window.onload = fetchQueue;
+    window.onload = fetchQueue;
     </script>
 </body>
 </html>
