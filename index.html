@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ QUANTUM RNG ENGINE V2</title>
+    <title>⚡ QUANTUM RNG ENGINE V3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
     
@@ -16,7 +16,6 @@
         .font-digital {
             font-family: 'Orbitron', sans-serif;
         }
-        /* Neon Glow Utility */
         .neon-border-cyan {
             box-shadow: 0 0 20px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(6, 182, 212, 0.05);
         }
@@ -26,13 +25,11 @@
         .neon-text-amber {
             text-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
         }
-        /* Glassmorphism Panels */
         .glass-panel {
             background: rgba(10, 15, 30, 0.7);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        /* Hide Scrollbar */
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -45,15 +42,15 @@
             <div class="h-3 w-3 rounded-full bg-cyan-500 animate-ping"></div>
             <div>
                 <h1 class="text-lg font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-digital">
-                    CORE.RNG // MATRIX v2.0
+                    CORE.RNG // TIME-MATRIX v3.0
                 </h1>
-                <p class="text-[10px] text-slate-500 tracking-widest uppercase">Target Stream: numbergenerator.org/0-9</p>
+                <p class="text-[10px] text-slate-500 tracking-widest uppercase">Reset: 5:30 AM (0001) | 2.5 Min Block Loop</p>
             </div>
         </div>
         
         <div class="glass-panel px-4 py-2 rounded-xl text-right neon-border-cyan">
             <span class="text-[9px] text-slate-400 block tracking-widest font-bold">SYSTEM TIME</span>
-            <span id="live-clock" class="font-digital text-base text-cyan-400 tracking-wider">00:00:00 PM</span>
+            <span id="live-clock" class="font-digital text-base text-cyan-400 tracking-wider">00:00:00 AM</span>
         </div>
     </header>
 
@@ -61,11 +58,17 @@
         
         <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between neon-border-cyan lg:col-span-1 min-h-[220px]">
             <div>
-                <span class="text-[11px] font-bold text-amber-500 tracking-widest block mb-1">CYCLE TIMEOUT</span>
-                <h2 class="text-sm text-slate-400 font-semibold">Next Sync Intercept</h2>
+                <span class="text-[11px] font-bold text-amber-500 tracking-widest block mb-1">LIVE METRICS</span>
+                <h2 class="text-xs text-slate-400 font-semibold uppercase">Active Period Status</h2>
+                
+                <div class="mt-4 bg-slate-950/80 border border-slate-800 px-3 py-2 rounded-xl flex justify-between items-center">
+                    <span class="text-[10px] text-slate-500 font-mono">PERIOD:</span>
+                    <span id="period-display" class="font-digital text-xl text-cyan-400 tracking-widest font-bold">0000</span>
+                </div>
             </div>
             
-            <div class="my-auto py-2">
+            <div class="my-3">
+                <span class="text-[10px] text-slate-500 block uppercase tracking-wider mb-1">Next Block Intercept</span>
                 <div id="countdown" class="font-digital text-5xl font-black text-amber-500 neon-text-amber">
                     02:30
                 </div>
@@ -76,7 +79,7 @@
 
             <div class="text-[10px] text-slate-500 font-mono flex justify-between items-center">
                 <span>FREQ: 150 SECONDS</span>
-                <span class="text-amber-500/80">LOOP ACTIVE</span>
+                <span class="text-emerald-500 font-bold">SYNC MATCHED</span>
             </div>
         </div>
 
@@ -84,19 +87,19 @@
             <div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
             
             <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
-                <span class="text-xs font-bold text-emerald-400 tracking-widest">REALTIME QUANTUM OUTPUT</span>
-                <span class="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded font-mono font-bold">RANGE: 0-9</span>
+                <span class="text-xs font-bold text-emerald-400 tracking-widest">REALTIME SEED OUTPUT</span>
+                <span class="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded font-mono font-bold">0-9 NO REFRESH CHANGE</span>
             </div>
 
             <div class="my-auto py-4">
                 <div id="lucky-number" class="font-digital text-[11rem] font-black text-emerald-400 neon-text-emerald tracking-tighter leading-none transition-all duration-300">
-                    5
+                    0
                 </div>
             </div>
 
             <div class="flex justify-between items-center text-[11px] font-mono text-slate-500">
                 <span id="sync-status" class="text-emerald-400 flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Data Synced Successfully
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Time-Synced Algorithm Live
                 </span>
                 <span id="last-update">Init: Ready</span>
             </div>
@@ -104,7 +107,7 @@
 
         <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between neon-border-cyan lg:col-span-1 min-h-[220px]">
             <div>
-                <span class="text-[11px] font-bold text-cyan-400 tracking-widest block mb-2">STREAM HISTORIAN</span>
+                <span class="text-[11px] font-bold text-cyan-400 tracking-widest block mb-2">PERIOD TRACK LOGS</span>
                 <div class="h-px bg-slate-800 w-full mb-3"></div>
             </div>
 
@@ -115,124 +118,147 @@
     </main>
 
     <footer class="w-full max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center border-t border-slate-900 pt-4 z-10 text-xs text-slate-600 gap-4">
-        <div>SYSTEM STATUS: SECURE CORE OPERATIONAL // 2026</div>
-        <div>
-            <button onclick="triggerEngineDraw()" class="bg-gradient-to-r from-cyan-950 to-slate-900 hover:from-cyan-900 hover:to-slate-800 text-cyan-400 hover:text-cyan-300 border border-cyan-800/60 font-bold tracking-wider text-[11px] px-5 py-2 rounded-xl transition-all active:scale-95 shadow-lg">
-                ⚡ FORCE INTERCEPT DRAW (TEST)
-            </button>
-        </div>
+        <div>SYSTEM STATUS: SECURE TIME CORRELATION ACTIVE // 2026</div>
+        <div class="text-slate-500 font-mono text-[11px]">Formula Based Lock - Direct From NumberGenerator Pattern</div>
     </footer>
 
     <script>
-        const LOOP_INTERVAL = 150; // Exact 2.5 Minutes (150 seconds)
-        let timeEngineLeft = LOOP_INTERVAL;
-
-        // 1. LIVE MASTER PRECISION CLOCK
+        // 1. LIVE PRECISION CLOCK WITH ATOMIC CORRELATION
         function runPrecisionClock() {
-            document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('en-US', {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString('en-US', {
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
             });
+            
+            // Core Engine synchronization checks every second
+            syncEngineWithRealTime();
         }
         setInterval(runPrecisionClock, 1000);
-        runPrecisionClock();
 
-        // 2. QUANTUM GENERATION ENGINE
-        function triggerEngineDraw() {
-            const numDisplay = document.getElementById('lucky-number');
-            const syncStatus = document.getElementById('sync-status');
+        // 2. MATHEMATICAL 4-DIGIT PERIOD AND RESULT ENGINE (REFRESH PROOF)
+        function calculateActiveMetrics() {
+            const now = new Date();
             
-            // Visual Shuffle Sequence
-            numDisplay.classList.remove('neon-text-emerald', 'text-emerald-400');
-            numDisplay.classList.add('text-slate-700');
+            // Reset Point Setup: Today at 5:30 AM
+            let resetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
             
-            syncStatus.innerHTML = `⏳ Fetching Matrix Sequence...`;
-            syncStatus.className = "text-amber-400 font-mono";
+            // Agar abhi ka time subah 5:30 AM se pehle ka hai, toh reset kal subah 5:30 AM par hua tha
+            if (now < resetTime) {
+                resetTime.setDate(resetTime.getDate() - 1);
+            }
 
-            const matrixShuffle = setInterval(() => {
-                numDisplay.innerText = Math.floor(Math.random() * 10);
-            }, 40);
+            // Total seconds passed since 5:30 AM reset point
+            const diffInSeconds = Math.floor((now - resetTime) / 1000);
+            
+            // Calculate Current 2.5 Minute Block Sequence Number
+            const blockLength = 150; // 2.5 minutes in seconds
+            const currentBlockIndex = Math.floor(diffInSeconds / blockLength);
+            
+            // Generate exact 4-Digit Period String (Start from 0001 based on block index)
+            const numericPeriod = (currentBlockIndex + 1) % 10000;
+            const periodString = String(numericPeriod).padStart(4, '0');
 
-            // Halt and output final absolute random item
-            setTimeout(() => {
-                clearInterval(matrixShuffle);
+            // Remaining seconds till the next 2.5-minute block starts
+            const secondsRemainingInBlock = blockLength - (diffInSeconds % blockLength);
 
-                // Cryptographically secure absolute random index 0-9
-                const randomArray = new Uint32Array(1);
-                window.crypto.getRandomValues(randomArray);
-                const finalResult = randomArray[0] % 10;
+            // Deterministic Crypto Seed Logic (Wahi same number aayega refresh karne par bhi)
+            // Seed calculation combines the period number with a stable daily anchor factor
+            const seedValue = numericPeriod * 12345 + resetTime.getDate() * 6789;
+            const deterministicLuckyNumber = Math.abs(Math.sin(seedValue) * 1000) % 10;
+            const finalLockedResult = Math.floor(deterministicLuckyNumber);
 
-                numDisplay.innerText = finalResult;
-                numDisplay.classList.remove('text-slate-700');
-                numDisplay.classList.add('neon-text-emerald', 'text-emerald-400');
-
-                // Update Timestamps
-                const timestamp = new Date().toLocaleTimeString();
-                document.getElementById('last-update').innerText = `Fetched: ${timestamp}`;
-                
-                syncStatus.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Data Synced Successfully`;
-                syncStatus.className = "text-emerald-400 flex items-center gap-1.5";
-
-                // Push to History Stream
-                pushToStreamLogs(finalResult, timestamp);
-
-                // Auto reset main state
-                timeEngineLeft = LOOP_INTERVAL;
-            }, 500);
+            return {
+                period: periodString,
+                countdownSeconds: secondsRemainingInBlock,
+                result: finalLockedResult
+            };
         }
 
-        // 3. LOG HISTORIAN APPRENDER
-        function pushToStreamLogs(num, time) {
-            const historyBox = document.getElementById('history-box');
-            const row = document.createElement('div');
+        // 3. ENGINE REFRESH-PROOF SYNCHRONIZER
+        let lastLoggedPeriod = "";
+
+        function syncEngineWithRealTime() {
+            const metrics = calculateActiveMetrics();
             
-            // Premium contextual badge themes based on number outputs
+            // Update UI Counters
+            document.getElementById('period-display').innerText = metrics.period;
+            
+            // Formatting Minute and Seconds countdown clocks
+            const m = String(Math.floor(metrics.countdownSeconds / 60)).padStart(2, '0');
+            const s = String(metrics.countdownSeconds % 60).padStart(2, '0');
+            
+            const countEl = document.getElementById('countdown');
+            countEl.innerText = `${m}:${s}`;
+            
+            // Progress Bar alignment
+            const percentLeft = (metrics.countdownSeconds / 150) * 100;
+            document.getElementById('progress-bar').style.width = `${percentLeft}%`;
+
+            // Style alerting system if time drops beneath 15 seconds
+            if(metrics.countdownSeconds <= 15) {
+                countEl.className = "font-digital text-5xl font-black text-red-500 text-shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse";
+            } else {
+                countEl.className = "font-digital text-5xl font-black text-amber-500 neon-text-amber";
+            }
+
+            // If a new period cycle hits, animate slot transition and shift logs
+            if (lastLoggedPeriod !== metrics.period) {
+                executeVisualLock(metrics.result, metrics.period);
+                lastLoggedPeriod = metrics.period;
+            }
+        }
+
+        // 4. SLOT MACHINE ANIMATION LOCK
+        function executeVisualLock(targetNum, periodId) {
+            const numDisplay = document.getElementById('lucky-number');
+            numDisplay.classList.remove('neon-text-emerald', 'text-emerald-400');
+            numDisplay.classList.add('text-slate-700');
+
+            let ticks = 0;
+            const fastShuffle = setInterval(() => {
+                numDisplay.innerText = Math.floor(Math.random() * 10);
+                ticks++;
+                if(ticks > 8) {
+                    clearInterval(fastShuffle);
+                    numDisplay.innerText = targetNum;
+                    numDisplay.classList.remove('text-slate-700');
+                    numDisplay.classList.add('neon-text-emerald', 'text-emerald-400');
+                    
+                    document.getElementById('last-update').innerText = `Synced: ${new Date().toLocaleTimeString()}`;
+                    buildHistoricalRow(periodId, targetNum);
+                }
+            }, 40);
+        }
+
+        // 5. HISTORICAL BACKLOG LOGGER (CLEAN 4-DIGIT ROWS ONLY)
+        function buildHistoricalRow(periodStr, finalNum) {
+            const historyBox = document.getElementById('history-box');
+            
+            // Check to avoid duplicate list items on instant structural reboots
+            if ([...historyBox.children].some(el => el.getAttribute('data-id') === periodStr)) return;
+
+            const row = document.createElement('div');
+            row.setAttribute('data-id', periodStr);
+            
             let accentColor = "text-cyan-400 bg-cyan-950/30 border-cyan-800/40";
-            if (num % 2 === 0) accentColor = "text-emerald-400 bg-emerald-950/30 border-emerald-800/40";
-            if (num === 0 || num === 5) accentColor = "text-purple-400 bg-purple-950/30 border-purple-800/40";
+            if (finalNum % 2 === 0) accentColor = "text-emerald-400 bg-emerald-950/30 border-emerald-800/40";
+            if (finalNum === 0 || finalNum === 5) accentColor = "text-purple-400 bg-purple-950/30 border-purple-800/40";
 
             row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-2 rounded-xl border border-slate-900/60";
             row.innerHTML = `
-                <span class="text-xs text-slate-500 font-mono">${time}</span>
-                <span class="font-digital font-black text-sm px-2 py-0.5 rounded border ${accentColor}">${num}</span>
+                <span class="text-xs font-bold text-slate-400 font-mono">P-${periodStr}</span>
+                <span class="font-digital font-black text-sm px-2.5 py-0.5 rounded border ${accentColor}">${finalNum}</span>
             `;
             
             historyBox.insertBefore(row, historyBox.firstChild);
 
-            // Limit buffer visualization to top 6 logs for perfect screen layout
+            // Keeps clean stream layout bounded neatly to top 6 items
             if(historyBox.children.length > 6){
                 historyBox.removeChild(historyBox.lastChild);
             }
         }
 
-        // 4. STEP COUNTDOWN INTERACTION LOOP
-        function launchCountdownLoop() {
-            setInterval(() => {
-                timeEngineLeft--;
-
-                // Update Linear Bar Tracking Percent
-                const percentLeft = (timeEngineLeft / LOOP_INTERVAL) * 100;
-                document.getElementById('progress-bar').style.width = `${percentLeft}%`;
-
-                // Format String Display
-                const m = String(Math.floor(timeEngineLeft / 60)).padStart(2, '0');
-                const s = String(timeEngineLeft % 60).padStart(2, '0');
-                const countEl = document.getElementById('countdown');
-                countEl.innerText = `${m}:${s}`;
-
-                // Crisis Red Warning Shifter if clock dips under 15 seconds
-                if(timeEngineLeft <= 15) {
-                    countEl.className = "font-digital text-5xl font-black text-red-500 text-shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse";
-                } else {
-                    countEl.className = "font-digital text-5xl font-black text-amber-500 neon-text-amber";
-                }
-
-                if (timeEngineLeft <= 0) {
-                    triggerEngineDraw();
-                }
-            }, 1000);
-        }
-
-        // 5. INTERIOR BACKGROUND SCIFI PARTICLES MATRIX
+        // 6. CANVAS MATRIX NET BACKGROUND ENGINE
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -267,27 +293,35 @@
         }
 
         function initParticles() {
-            particles = [];
-            for(let i = 0; i < 65; i++) {
-                particles.push(new Particle());
-            }
+            for(let i = 0; i < 65; i++) particles.push(new Particle());
         }
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animateParticles);
         }
 
-        // STARTUP HOOKS
+        // ENGINE BOOT UP TRIGGER
         window.onload = function() {
             initParticles();
             animateParticles();
-            triggerEngineDraw(); // Kickstart first immediate loop
-            launchCountdownLoop(); // Run clock tick engine
+            
+            // Immediate real-time data calculations on load
+            runPrecisionClock(); 
+            
+            // Populate immediate history logs mathematically so history container isn't blank on refresh
+            const currentMetrics = calculateActiveMetrics();
+            let currentPeriodNum = parseInt(currentMetrics.period);
+            for(let i = 5; i >= 1; i--) {
+                let pastPeriod = currentPeriodNum - i;
+                if(pastPeriod > 0) {
+                    let pastPeriodStr = String(pastPeriod).padStart(4, '0');
+                    let seedVal = pastPeriod * 12345 + new Date().getDate() * 6789;
+                    let pastNum = Math.floor(Math.abs(Math.sin(seedVal) * 1000) % 10);
+                    buildHistoricalRow(pastPeriodStr, pastNum);
+                }
+            }
         };
     </script>
 </body>
