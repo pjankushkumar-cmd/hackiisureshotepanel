@@ -2,266 +2,269 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ QUANTUM RNG ENGINE V3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ HACKII PREMIUM ENGINE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #030712;
+            background-color: #020617;
             overflow: hidden;
+            touch-action: manipulation;
         }
         .font-digital {
             font-family: 'Orbitron', sans-serif;
         }
-        .neon-border-cyan {
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(6, 182, 212, 0.05);
+        /* Color Pop & Rainbow Gradient for HACKII */
+        .hackii-gradient {
+            background: linear-gradient(45deg, #ff007f, #7928ca, #00dfd8, #ff007f);
+            background-size: 300% 300%;
+            animation: rainbowShift 6s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .neon-text-emerald {
-            text-shadow: 0 0 30px rgba(16, 185, 129, 0.8), 0 0 60px rgba(16, 185, 129, 0.4);
+        @keyframes rainbowShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .neon-text-amber {
-            text-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
+        /* Neon Highlights */
+        .neon-glow-cyan {
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.2);
+            border: 1px solid rgba(6, 182, 212, 0.4);
         }
-        .glass-panel {
-            background: rgba(10, 15, 30, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .neon-digit {
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.7);
         }
-        ::-webkit-scrollbar { display: none; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
     </style>
 </head>
-<body class="text-slate-100 h-screen w-screen flex flex-col justify-between p-6 relative select-none">
+<body class="text-slate-100 h-screen w-screen flex flex-col justify-between p-4 relative select-none">
 
-    <canvas id="particleCanvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
+    <canvas id="bgCanvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
 
-    <header class="w-full max-w-6xl mx-auto flex justify-between items-center z-10">
-        <div class="flex items-center gap-3">
-            <div class="h-3 w-3 rounded-full bg-cyan-500 animate-ping"></div>
-            <div>
-                <h1 class="text-lg font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-digital">
-                    CORE.RNG // TIME-MATRIX v3.0
-                </h1>
-                <p class="text-[10px] text-slate-500 tracking-widest uppercase">Reset: 5:30 AM (0001) | 2.5 Min Block Loop</p>
-            </div>
+    <header class="w-full flex justify-between items-center z-10 pt-2 shrink-0">
+        <div>
+            <h1 id="brand-tag" class="text-3xl font-black tracking-tighter hackii-gradient font-digital">
+                HACKII
+            </h1>
+            <p class="text-[9px] text-cyan-400/80 font-mono tracking-widest uppercase">Quantum 4-Digit Stream</p>
         </div>
         
-        <div class="glass-panel px-4 py-2 rounded-xl text-right neon-border-cyan">
-            <span class="text-[9px] text-slate-400 block tracking-widest font-bold">SYSTEM TIME</span>
-            <span id="live-clock" class="font-digital text-base text-cyan-400 tracking-wider">00:00:00 AM</span>
+        <div class="glass-card px-3 py-1.5 rounded-xl text-right border border-slate-800">
+            <span id="live-clock" class="font-digital text-sm text-cyan-400 tracking-wider">00:00:00 AM</span>
         </div>
     </header>
 
-    <main class="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 my-auto items-stretch z-10 relative">
+    <main class="w-full flex flex-col gap-4 my-auto z-10 relative justify-center">
         
-        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between neon-border-cyan lg:col-span-1 min-h-[220px]">
-            <div>
-                <span class="text-[11px] font-bold text-amber-500 tracking-widest block mb-1">LIVE METRICS</span>
-                <h2 class="text-xs text-slate-400 font-semibold uppercase">Active Period Status</h2>
-                
-                <div class="mt-4 bg-slate-950/80 border border-slate-800 px-3 py-2 rounded-xl flex justify-between items-center">
-                    <span class="text-[10px] text-slate-500 font-mono">PERIOD:</span>
-                    <span id="period-display" class="font-digital text-xl text-cyan-400 tracking-widest font-bold">0000</span>
-                </div>
+        <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border border-slate-800/80">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-[10px] font-bold text-amber-500 tracking-widest uppercase">Next Sync Draw</span>
+                <span class="text-[10px] font-mono text-slate-500">RESET: 5:30 AM</span>
             </div>
             
-            <div class="my-3">
-                <span class="text-[10px] text-slate-500 block uppercase tracking-wider mb-1">Next Block Intercept</span>
-                <div id="countdown" class="font-digital text-5xl font-black text-amber-500 neon-text-amber">
+            <div class="flex items-center justify-between">
+                <div id="countdown" class="font-digital text-4xl font-black text-amber-500 tracking-wide">
                     02:30
                 </div>
-                <div class="w-full bg-slate-950 h-1 rounded-full mt-3 overflow-hidden border border-slate-800">
-                    <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full w-full transition-all duration-1000 ease-linear"></div>
+                <div class="text-[10px] text-slate-400 font-mono text-right">
+                    LOOP INTERVAL<br><span class="text-amber-400 font-bold">150 SECONDS</span>
                 </div>
             </div>
 
-            <div class="text-[10px] text-slate-500 font-mono flex justify-between items-center">
-                <span>FREQ: 150 SECONDS</span>
-                <span class="text-emerald-500 font-bold">SYNC MATCHED</span>
+            <div class="w-full bg-slate-950 h-1.5 rounded-full mt-3 overflow-hidden border border-slate-900">
+                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full w-full transition-all duration-1000 ease-linear"></div>
             </div>
         </div>
 
-        <div class="glass-panel p-8 rounded-3xl text-center lg:col-span-2 flex flex-col justify-between relative overflow-hidden border border-emerald-500/20 shadow-[0_0_50px_rgba(16,185,129,0.03)] min-h-[360px]">
-            <div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
-            
-            <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
-                <span class="text-xs font-bold text-emerald-400 tracking-widest">REALTIME SEED OUTPUT</span>
-                <span class="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded font-mono font-bold">0-9 NO REFRESH CHANGE</span>
+        <div class="glass-card p-6 rounded-3xl text-center flex flex-col justify-between relative overflow-hidden neon-glow-cyan">
+            <span class="text-[11px] font-bold text-cyan-400 tracking-widest uppercase block mb-4">Live Matrix Output</span>
+
+            <div class="grid grid-cols-4 gap-3 my-auto py-2 justify-center px-1">
+                <div id="digit-1" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
+                <div id="digit-2" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
+                <div id="digit-3" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
+                <div id="digit-4" class="font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit">0</div>
             </div>
 
-            <div class="my-auto py-4">
-                <div id="lucky-number" class="font-digital text-[11rem] font-black text-emerald-400 neon-text-emerald tracking-tighter leading-none transition-all duration-300">
-                    0
-                </div>
-            </div>
-
-            <div class="flex justify-between items-center text-[11px] font-mono text-slate-500">
-                <span id="sync-status" class="text-emerald-400 flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Time-Synced Algorithm Live
+            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800/60 pt-4 mt-4">
+                <span id="sync-status" class="text-emerald-400 flex items-center gap-1">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Refresh Proof Safe Logic
                 </span>
-                <span id="last-update">Init: Ready</span>
+                <span id="last-update">Init: Active</span>
             </div>
         </div>
 
-        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between neon-border-cyan lg:col-span-1 min-h-[220px]">
-            <div>
-                <span class="text-[11px] font-bold text-cyan-400 tracking-widest block mb-2">PERIOD TRACK LOGS</span>
-                <div class="h-px bg-slate-800 w-full mb-3"></div>
-            </div>
+        <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border border-slate-800/80">
+            <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-2 block border-b border-slate-800/60 pb-1.5">Recent Generated Sequence</span>
 
-            <div id="history-box" class="flex-1 overflow-y-auto space-y-2.5 max-h-[220px] pr-0.5">
+            <div id="history-box" class="flex flex-col gap-2 max-h-[140px] overflow-y-auto pr-0.5">
                 </div>
         </div>
 
     </main>
 
-    <footer class="w-full max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center border-t border-slate-900 pt-4 z-10 text-xs text-slate-600 gap-4">
-        <div>SYSTEM STATUS: SECURE TIME CORRELATION ACTIVE // 2026</div>
-        <div class="text-slate-500 font-mono text-[11px]">Formula Based Lock - Direct From NumberGenerator Pattern</div>
+    <footer class="w-full text-center text-[9px] text-slate-600 font-mono tracking-wider shrink-0 pb-2 z-10">
+        HACKII MATRIX ENGINE // MATHEMATICAL CORRELATION SECURE
     </footer>
 
     <script>
-        // 1. LIVE PRECISION CLOCK WITH ATOMIC CORRELATION
-        function runPrecisionClock() {
-            const now = new Date();
-            document.getElementById('live-clock').innerText = now.toLocaleTimeString('en-US', {
+        const BLOCK_LOOP = 150; // 2.5 Minutes loop in seconds
+        let currentSecondsLeft = BLOCK_LOOP;
+        let activePeriodIndex = 0;
+
+        // 1. DIGITAL LIVE CLOCK SYSTEM
+        function updateSystemClock() {
+            const timeObj = new Date();
+            document.getElementById('live-clock').innerText = timeObj.toLocaleTimeString('en-US', {
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
             });
             
-            // Core Engine synchronization checks every second
-            syncEngineWithRealTime();
+            // Execute automated synchronization logic every second
+            syncEnginePipeline();
         }
-        setInterval(runPrecisionClock, 1000);
+        setInterval(updateSystemClock, 1000);
 
-        // 2. MATHEMATICAL 4-DIGIT PERIOD AND RESULT ENGINE (REFRESH PROOF)
-        function calculateActiveMetrics() {
+        // 2. MATHEMATICAL TIME-ALIGNED SEED LOGIC (REFRESH PROOF)
+        function calculateTimeBlockMetrics() {
             const now = new Date();
             
-            // Reset Point Setup: Today at 5:30 AM
-            let resetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
+            // Core Daily Reset Baseline: Today at 5:30 AM
+            let resetBase = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0, 0);
             
-            // Agar abhi ka time subah 5:30 AM se pehle ka hai, toh reset kal subah 5:30 AM par hua tha
-            if (now < resetTime) {
-                resetTime.setDate(resetTime.getDate() - 1);
+            // Handle early morning rollbacks
+            if (now < resetBase) {
+                resetBase.setDate(resetBase.getDate() - 1);
             }
 
-            // Total seconds passed since 5:30 AM reset point
-            const diffInSeconds = Math.floor((now - resetTime) / 1000);
+            // Total seconds transpired since 5:30 AM
+            const elapsedSeconds = Math.floor((now - resetBase) / 1000);
             
-            // Calculate Current 2.5 Minute Block Sequence Number
-            const blockLength = 150; // 2.5 minutes in seconds
-            const currentBlockIndex = Math.floor(diffInSeconds / blockLength);
+            // Extract current 2.5 minute sequence number
+            const targetBlockIndex = Math.floor(elapsedSeconds / BLOCK_LOOP);
             
-            // Generate exact 4-Digit Period String (Start from 0001 based on block index)
-            const numericPeriod = (currentBlockIndex + 1) % 10000;
-            const periodString = String(numericPeriod).padStart(4, '0');
+            // Remaining countdown seconds for current block
+            const secondsRemaining = BLOCK_LOOP - (elapsedSeconds % BLOCK_LOOP);
 
-            // Remaining seconds till the next 2.5-minute block starts
-            const secondsRemainingInBlock = blockLength - (diffInSeconds % blockLength);
-
-            // Deterministic Crypto Seed Logic (Wahi same number aayega refresh karne par bhi)
-            // Seed calculation combines the period number with a stable daily anchor factor
-            const seedValue = numericPeriod * 12345 + resetTime.getDate() * 6789;
-            const deterministicLuckyNumber = Math.abs(Math.sin(seedValue) * 1000) % 10;
-            const finalLockedResult = Math.floor(deterministicLuckyNumber);
+            // Generate 4 deterministic digits using separate unique mathematical anchors
+            const digits = [];
+            for(let i = 1; i <= 4; i++) {
+                const customSeed = (targetBlockIndex + 1) * (i * 31) + resetBase.getDate() * 97;
+                const trigFormula = Math.abs(Math.sin(customSeed) * 1000) % 10;
+                digits.push(Math.floor(trigFormula));
+            }
 
             return {
-                period: periodString,
-                countdownSeconds: secondsRemainingInBlock,
-                result: finalLockedResult
+                blockID: targetBlockIndex + 1,
+                countdown: secondsRemaining,
+                digitArray: digits
             };
         }
 
-        // 3. ENGINE REFRESH-PROOF SYNCHRONIZER
-        let lastLoggedPeriod = "";
+        // 3. PIPELINE REFRESH-PROOF ALIGNER
+        function syncEnginePipeline() {
+            const data = calculateTimeBlockMetrics();
+            
+            // Format countdown string
+            const m = String(Math.floor(data.countdown / 60)).padStart(2, '0');
+            const s = String(data.countdown % 60).padStart(2, '0');
+            
+            const countDisplay = document.getElementById('countdown');
+            countDisplay.innerText = `${m}:${s}`;
+            
+            // Align Progress Indicator
+            document.getElementById('progress-bar').style.width = `${(data.countdown / BLOCK_LOOP) * 100}%`;
 
-        function syncEngineWithRealTime() {
-            const metrics = calculateActiveMetrics();
-            
-            // Update UI Counters
-            document.getElementById('period-display').innerText = metrics.period;
-            
-            // Formatting Minute and Seconds countdown clocks
-            const m = String(Math.floor(metrics.countdownSeconds / 60)).padStart(2, '0');
-            const s = String(metrics.countdownSeconds % 60).padStart(2, '0');
-            
-            const countEl = document.getElementById('countdown');
-            countEl.innerText = `${m}:${s}`;
-            
-            // Progress Bar alignment
-            const percentLeft = (metrics.countdownSeconds / 150) * 100;
-            document.getElementById('progress-bar').style.width = `${percentLeft}%`;
-
-            // Style alerting system if time drops beneath 15 seconds
-            if(metrics.countdownSeconds <= 15) {
-                countEl.className = "font-digital text-5xl font-black text-red-500 text-shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse";
+            // Flash red warning if countdown dips below 15 seconds
+            if(data.countdown <= 15) {
+                countDisplay.className = "font-digital text-4xl font-black text-red-500 animate-pulse";
             } else {
-                countEl.className = "font-digital text-5xl font-black text-amber-500 neon-text-amber";
+                countDisplay.className = "font-digital text-4xl font-black text-amber-500";
             }
 
-            // If a new period cycle hits, animate slot transition and shift logs
-            if (lastLoggedPeriod !== metrics.period) {
-                executeVisualLock(metrics.result, metrics.period);
-                lastLoggedPeriod = metrics.period;
+            // If new time block sequence index shifts, trigger matrix shuffle draw
+            if (activePeriodIndex !== data.blockID) {
+                executeMatrixShuffle(data.digitArray, data.blockID);
+                activePeriodIndex = data.blockID;
             }
         }
 
-        // 4. SLOT MACHINE ANIMATION LOCK
-        function executeVisualLock(targetNum, periodId) {
-            const numDisplay = document.getElementById('lucky-number');
-            numDisplay.classList.remove('neon-text-emerald', 'text-emerald-400');
-            numDisplay.classList.add('text-slate-700');
+        // 4. MATRIX SLOT MACHINE INDEPENDENT MULTI-DIGIT SHUFFLE
+        function executeMatrixShuffle(finalDigits, sequenceId) {
+            const syncStatus = document.getElementById('sync-status');
+            syncStatus.innerHTML = `⏳ Matrix Syncing...`;
+            syncStatus.className = "text-amber-400 font-mono";
 
-            let ticks = 0;
-            const fastShuffle = setInterval(() => {
-                numDisplay.innerText = Math.floor(Math.random() * 10);
-                ticks++;
-                if(ticks > 8) {
-                    clearInterval(fastShuffle);
-                    numDisplay.innerText = targetNum;
-                    numDisplay.classList.remove('text-slate-700');
-                    numDisplay.classList.add('neon-text-emerald', 'text-emerald-400');
+            const slots = [
+                document.getElementById('digit-1'),
+                document.getElementById('digit-2'),
+                document.getElementById('digit-3'),
+                document.getElementById('digit-4')
+            ];
+
+            // Trigger visual text color off during roll
+            slots.forEach(slot => {
+                slot.className = "font-digital text-6xl font-black text-slate-700 bg-slate-950/80 rounded-2xl py-4 border border-slate-900";
+            });
+
+            let iterations = 0;
+            const liveShuffle = setInterval(() => {
+                slots.forEach(slot => {
+                    slot.innerText = Math.floor(Math.random() * 10);
+                });
+                iterations++;
+
+                // Stop roll sequence and apply final mathematical values
+                if(iterations > 10) {
+                    clearInterval(liveShuffle);
                     
-                    document.getElementById('last-update').innerText = `Synced: ${new Date().toLocaleTimeString()}`;
-                    buildHistoricalRow(periodId, targetNum);
+                    finalDigits.forEach((digitValue, index) => {
+                        slots[index].innerText = digitValue;
+                        slots[index].className = "font-digital text-6xl font-black text-emerald-400 bg-slate-950/80 rounded-2xl py-4 border border-emerald-500/20 neon-digit transition-all duration-200";
+                    });
+
+                    const timestampStr = new Date().toLocaleTimeString();
+                    document.getElementById('last-update').innerText = `Sync: ${timestampStr}`;
+                    
+                    syncStatus.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Time-Synced Live`;
+                    syncStatus.className = "text-emerald-400 flex items-center gap-1";
+
+                    // Prepend final sequence array into historical rows
+                    appendHistoryRow(finalDigits.join(" "), timestampStr);
                 }
             }, 40);
         }
 
-        // 5. HISTORICAL BACKLOG LOGGER (CLEAN 4-DIGIT ROWS ONLY)
-        function buildHistoricalRow(periodStr, finalNum) {
-            const historyBox = document.getElementById('history-box');
+        // 5. CLEAN DYNAMIC LOG PACKER
+        function appendHistoryRow(digitString, timestamp) {
+            const box = document.getElementById('history-box');
+            const element = document.createElement('div');
             
-            // Check to avoid duplicate list items on instant structural reboots
-            if ([...historyBox.children].some(el => el.getAttribute('data-id') === periodStr)) return;
-
-            const row = document.createElement('div');
-            row.setAttribute('data-id', periodStr);
-            
-            let accentColor = "text-cyan-400 bg-cyan-950/30 border-cyan-800/40";
-            if (finalNum % 2 === 0) accentColor = "text-emerald-400 bg-emerald-950/30 border-emerald-800/40";
-            if (finalNum === 0 || finalNum === 5) accentColor = "text-purple-400 bg-purple-950/30 border-purple-800/40";
-
-            row.className = "flex justify-between items-center bg-slate-950/80 px-3 py-2 rounded-xl border border-slate-900/60";
-            row.innerHTML = `
-                <span class="text-xs font-bold text-slate-400 font-mono">P-${periodStr}</span>
-                <span class="font-digital font-black text-sm px-2.5 py-0.5 rounded border ${accentColor}">${finalNum}</span>
+            element.className = "flex justify-between items-center bg-slate-950/70 px-4 py-2 rounded-xl border border-slate-900";
+            element.innerHTML = `
+                <span class="text-xs text-slate-500 font-mono">${timestamp}</span>
+                <span class="font-digital font-black text-base text-cyan-400 tracking-widest">${digitString}</span>
             `;
             
-            historyBox.insertBefore(row, historyBox.firstChild);
+            box.insertBefore(element, box.firstChild);
 
-            // Keeps clean stream layout bounded neatly to top 6 items
-            if(historyBox.children.length > 6){
-                historyBox.removeChild(historyBox.lastChild);
+            // Bounded historical records to max 4 slots for clear layout scaling
+            if(box.children.length > 4) {
+                box.removeChild(box.lastChild);
             }
         }
 
-        // 6. CANVAS MATRIX NET BACKGROUND ENGINE
-        const canvas = document.getElementById('particleCanvas');
+        // 6. MINIMAL CANVAS AMBIENT BACKGROUND INTERACTIVE PARTICLES
+        const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
+        let dots = [];
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -270,56 +273,52 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        class Particle {
+        class MicroDot {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = Math.random() * 0.2 - 0.1;
-                this.speedY = Math.random() * 0.2 - 0.1;
+                this.vY = Math.random() * 0.15 + 0.05;
             }
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if(this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if(this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                this.y += this.vY;
+                if(this.y > canvas.height) this.y = 0;
             }
             draw() {
-                ctx.fillStyle = 'rgba(6, 182, 212, 0.12)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillStyle = 'rgba(6, 182, 212, 0.08)';
+                ctx.fillRect(this.x, this.y, 1.5, 1.5);
             }
         }
 
-        function initParticles() {
-            for(let i = 0; i < 65; i++) particles.push(new Particle());
+        function setupDots() {
+            for(let i = 0; i < 40; i++) dots.push(new MicroDot());
         }
 
-        function animateParticles() {
+        function runAnimationLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
+            dots.forEach(d => { d.update(); d.draw(); });
+            requestAnimationFrame(runAnimationLoop);
         }
 
-        // ENGINE BOOT UP TRIGGER
+        // CORES ENGINE EXECUTION
         window.onload = function() {
-            initParticles();
-            animateParticles();
+            setupDots();
+            runAnimationLoop();
             
-            // Immediate real-time data calculations on load
-            runPrecisionClock(); 
-            
-            // Populate immediate history logs mathematically so history container isn't blank on refresh
-            const currentMetrics = calculateActiveMetrics();
-            let currentPeriodNum = parseInt(currentMetrics.period);
-            for(let i = 5; i >= 1; i--) {
-                let pastPeriod = currentPeriodNum - i;
-                if(pastPeriod > 0) {
-                    let pastPeriodStr = String(pastPeriod).padStart(4, '0');
-                    let seedVal = pastPeriod * 12345 + new Date().getDate() * 6789;
-                    let pastNum = Math.floor(Math.abs(Math.sin(seedVal) * 1000) % 10);
-                    buildHistoricalRow(pastPeriodStr, pastNum);
+            // Core Boot Call
+            updateSystemClock();
+
+            // Mathematically pre-fill history records on instant load based on past sequence blocks
+            const initialMetrics = calculateTimeBlockMetrics();
+            let refID = initialMetrics.blockID;
+            for(let k = 1; k <= 3; k++) {
+                let checkID = refID - k;
+                if(checkID > 0) {
+                    const historicalDigits = [];
+                    for(let i = 1; i <= 4; i++) {
+                        const pastSeed = checkID * (i * 31) + new Date().getDate() * 97;
+                        historicalDigits.push(Math.floor(Math.abs(Math.sin(pastSeed) * 1000) % 10));
+                    }
+                    appendHistoryRow(historicalDigits.join(" "), `Past Step -${k}`);
                 }
             }
         };
