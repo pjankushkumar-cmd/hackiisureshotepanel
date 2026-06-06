@@ -1,8 +1,6 @@
-{
-  "APPROVED_UID_REGISTRY": {
-    "8888": "APPROVED",
-    "9999": "APPROVED"
-  },
-  "PENDING_REQUESTS": [],
-  "BANNED_REGISTRY": {}
-}
+const defaultSchema = {
+  APPROVED_UID_REGISTRY: { "9999": "APPROVED" },
+  PENDING_REQUESTS: [],
+  BANNED_REGISTRY: {},
+  NO_RECHARGE_REGISTRY: {}
+};
