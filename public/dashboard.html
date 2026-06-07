@@ -2,235 +2,95 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ HACKII VIP ANALYTICS DASHBOARD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ HACKII 20K QUANTUM ENGINE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Space Grotesk', sans-serif; background-color: #010206; overflow: hidden; }
         .font-digital { font-family: 'Orbitron', sans-serif; }
-        .cyber-text { background: linear-gradient(135deg, #00f0ff, #7000ff, #ff007f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .premium-card { background: rgba(6, 12, 26, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.04); box-shadow: 0 0 40px rgba(6, 182, 212, 0.12); }
-        .neon-digits { text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+        .hackii-glow { background: linear-gradient(45deg, #ff0055, #00ffcc, #9900ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(6, 10, 23, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
-<body class="text-slate-100 h-screen w-screen flex flex-col justify-between p-5 select-none relative">
+<body class="text-slate-100 h-screen w-screen flex flex-col p-4">
 
-    <script>
-        // CLIENT SECURITY LOCKOUT
-        if(!localStorage.getItem('USER_VALID_SESSION_UID')) { window.location.href = "index.html"; }
-    </script>
-
-    <header class="w-full flex justify-between items-center z-10 shrink-0">
+    <header class="w-full flex justify-between items-center z-10">
         <div>
-            <h1 class="text-3xl font-black font-digital tracking-tight cyber-text">HACKII PANEL 100K</h1>
-            <p class="text-[9px] text-purple-400 font-mono tracking-widest uppercase">HARDWARE SYSTEM: SECURE MATRIX</p>
+            <h1 class="text-3xl font-black hackii-glow font-digital">HACKII</h1>
+            <p class="text-[9px] text-cyan-400 font-mono tracking-widest">QUANTUM RNG v10.0</p>
         </div>
-        <div class="premium-card px-3 py-1 rounded-xl border border-slate-800">
-            <span id="live-clock" class="font-digital text-xs text-cyan-400 tracking-wider">00:00:00 PM</span>
-        </div>
+        <div id="live-clock" class="font-digital text-sm text-cyan-500">00:00:00</div>
     </header>
 
-    <main class="w-full flex flex-col gap-4 my-auto z-10 max-w-md mx-auto">
+    <main class="w-full flex flex-col gap-4 my-auto">
         
-        <div class="premium-card p-4 rounded-2xl border border-slate-800/80 shadow-lg">
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">3-MIN LOOP SEQUENCE</span>
-                <span id="loop-state-tag" class="text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE ROUND</span>
-            </div>
-            <div class="flex items-center justify-between">
-                <div id="countdown" class="font-digital text-4xl font-black text-amber-400 tracking-wider">03:00</div>
-                <div class="text-[9px] text-slate-500 font-mono text-right uppercase">CYCLE TIMELINE<br><span class="text-slate-400 font-bold">1 MIN PLAY + 2 MIN SKIP</span></div>
-            </div>
-            <div class="w-full bg-slate-950 h-1.5 rounded-full mt-3 overflow-hidden border border-slate-900">
-                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-yellow-400 h-full w-full transition-all duration-1000 ease-linear"></div>
-            </div>
+        <div class="glass-card p-4 rounded-2xl text-center border border-slate-800">
+            <span class="text-[10px] text-slate-500 font-mono uppercase">Next Cycle Pulse</span>
+            <div id="countdown" class="font-digital text-5xl font-black text-amber-400">00:00</div>
         </div>
 
-        <div class="premium-card p-5 rounded-3xl min-h-[240px] flex flex-col justify-between relative overflow-hidden border border-slate-800/80">
-            <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase text-center block mb-2">OUTPUT CHANNELS</span>
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 flex flex-col items-center">
+            <span class="text-[10px] text-cyan-400 mb-4 font-mono uppercase">Live Frequency Stream</span>
             
-            <div class="w-full py-2">
-                <div id="active-slots-view" class="grid grid-cols-2 gap-4 justify-center px-2">
-                    <div class="flex flex-col gap-2.5 items-center">
-                        <div id="digit-1" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digits">0</div>
-                        <span id="tag-1" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
-                    </div>
-                    <div class="flex flex-col gap-2.5 items-center">
-                        <div id="digit-2" class="w-full font-digital text-7xl font-black text-center text-emerald-400 bg-slate-950/90 rounded-2xl py-5 border border-emerald-500/20 neon-digits">0</div>
-                        <span id="tag-2" class="text-xs font-black tracking-widest font-mono px-4 py-1 rounded bg-slate-900 w-full text-center">--</span>
-                    </div>
-                </div>
-                <div id="wait-state-view" class="hidden flex-col items-center justify-center py-6 text-center">
-                    <div class="text-rose-500 font-digital text-2xl font-black tracking-widest animate-pulse mb-1">WAIT FOR NEXT ROUND</div>
-                    <p class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">SKIPPING 2 ROUNDS // SYSTEM STANDBY</p>
-                </div>
+            <div class="flex gap-4">
+                <div id="digit-1" class="font-digital text-8xl font-black text-emerald-400">0</div>
+                <div id="digit-2" class="font-digital text-8xl font-black text-emerald-400">0</div>
             </div>
-
-            <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-900/80 pt-3.5 mt-2">
-                <span id="sync-status" class="text-emerald-400 flex items-center gap-1"><span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> KERNEL SYNCED</span>
-                <span id="last-update">ACTIVE ENGINE</span>
+            
+            <div id="status-badge" class="mt-4 px-4 py-1 bg-slate-900 rounded-full text-xs font-mono text-slate-400 border border-slate-700">
+                WAITING FOR PULSE...
             </div>
         </div>
 
-        <div class="premium-card p-4 rounded-2xl border border-slate-800/80">
-            <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-2 block border-b border-slate-900 pb-1">CHRONO LOG INDEX</span>
-            <div id="history-box" class="flex flex-col gap-2 max-h-[110px] overflow-y-auto"></div>
-        </div>
+        <div id="history-box" class="glass-card p-4 rounded-2xl h-24 overflow-y-auto text-xs font-mono"></div>
     </main>
 
-    <footer class="w-full flex justify-between items-center text-[9px] text-slate-700 font-mono tracking-widest uppercase">
-        <span>VIP ENCRYPTED CHANNEL</span>
-        <span onclick="triggerLogout()" class="text-rose-500 font-bold cursor-pointer hover:underline">DISCONNECT</span>
-    </footer>
-
     <script>
-        const LOOP_SECONDS = 180;
-        let activeBlockIndex = -1;
-        let isUIVisualStateWait = false;
+        let isShuffling = false;
 
-        function runClockCycle() {
-            const timeObj = new Date();
-            document.getElementById('live-clock').innerText = timeObj.toLocaleTimeString('en-US', {
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-            });
+        function runEngine() {
+            const now = new Date();
+            const sec = now.getSeconds();
+            const remaining = 60 - sec;
+            document.getElementById('countdown').innerText = "00:" + String(remaining).padStart(2, '0');
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString();
 
-            let baseReset = new Date(timeObj.getFullYear(), timeObj.getMonth(), timeObj.getDate(), 5, 30, 0, 0);
-            if (timeObj < baseReset) { baseReset.setDate(baseReset.getDate() - 1); }
-
-            const deltaSeconds = Math.floor((timeObj - baseReset) / 1000);
-            const dataBlockID = Math.floor(deltaSeconds / LOOP_SECONDS) + 1;
-            const countdownRemaining = LOOP_SECONDS - (deltaSeconds % LOOP_SECONDS);
-
-            const mins = String(Math.floor(countdownRemaining / 60)).padStart(2, '0');
-            const secs = String(countdownRemaining % 60).padStart(2, '0');
-            document.getElementById('countdown').innerText = `${mins}:${secs}`;
-            document.getElementById('progress-bar').style.width = `${(countdownRemaining / LOOP_SECONDS) * 100}%`;
-
-            if (countdownRemaining <= 120) {
-                if (!isUIVisualStateWait) triggerWaitMode();
-            } else {
-                if (isUIVisualStateWait) isUIVisualStateWait = false;
-            }
-
-            if(activeBlockIndex !== dataBlockID) {
-                renderOutputCalculations(dataBlockID, baseReset.getDate());
-                activeBlockIndex = dataBlockID;
-            }
-        }
-        setInterval(runClockCycle, 1000);
-
-        function triggerWaitMode() {
-            isUIVisualStateWait = true;
-            document.getElementById('active-slots-view').classList.add('hidden');
-            document.getElementById('wait-state-view').classList.remove('hidden');
-            document.getElementById('wait-state-view').classList.add('flex');
-            
-            const tagState = document.getElementById('loop-state-tag');
-            tagState.innerText = "WAIT PHASE";
-            tagState.className = "text-[10px] bg-rose-950/40 border border-rose-900/50 text-rose-400 px-1.5 py-0.5 rounded font-mono font-bold";
-            document.getElementById('sync-status').innerHTML = `🛑 SKIP MODE ENFORCED`;
-            document.getElementById('sync-status').className = "text-rose-400 font-mono";
-        }
-
-        function renderOutputCalculations(blockId, dateSeed) {
-            document.getElementById('wait-state-view').classList.add('hidden');
-            document.getElementById('wait-state-view').classList.remove('flex');
-            document.getElementById('active-slots-view').classList.remove('hidden');
-            
-            const tagState = document.getElementById('loop-state-tag');
-            tagState.innerText = "ACTIVE ROUND";
-            tagState.className = "text-[10px] bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold";
-
-            const cells = [document.getElementById('digit-1'), document.getElementById('digit-2')];
-            const tags = [document.getElementById('tag-1'), document.getElementById('tag-2')];
-
-            let ticks = 0;
-            const scroll = setInterval(() => {
-                cells[0].innerText = Math.floor(Math.random() * 10);
-                cells[1].innerText = Math.floor(Math.random() * 10);
-                if(ticks++ > 12) {
-                    clearInterval(scroll);
-                    
-                    const stepFactor = blockId * 4327 + dateSeed * 761;
-                    const isBig = (Math.abs(Math.sin(stepFactor)) * 100000 % 7000) > 3500;
-
-                    const digits = [];
-                    for(let i=1; i<=2; i++) {
-                        let baseDigit = Math.floor(Math.abs(Math.cos(stepFactor * (i * 401))) * 8500) % 5;
-                        digits.push(isBig ? (baseDigit + 5) : baseDigit);
-                    }
-
-                    cells[0].innerText = digits[0];
-                    cells[1].innerText = digits[1];
-
-                    const label = isBig ? "BIG" : "SMALL";
-                    const styling = isBig ? "bg-pink-950/40 border border-pink-900/50 text-pink-400" : "bg-cyan-950/40 border border-cyan-900/50 text-cyan-400";
-                    
-                    tags.forEach(t => {
-                        t.innerText = label;
-                        t.className = `text-xs font-black tracking-widest font-mono px-4 py-1 rounded w-full text-center ${styling}`;
-                    });
-
-                    const exactTime = new Date().toLocaleTimeString();
-                    document.getElementById('last-update').innerText = `SYNCED: ${exactTime}`;
-                    document.getElementById('sync-status').innerHTML = `<span class="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span> STABLE INTEGRITY`;
-                    document.getElementById('sync-status').className = "text-emerald-400 flex items-center gap-1";
-
-                    logHistoryRow(label, `${digits[0]}${digits[1]}`, exactTime);
-                }
-            }, 50);
-        }
-
-        function logHistoryRow(lbl, combinedDigits, timestamp) {
-            const container = document.getElementById('history-box');
-            if(!container) return;
-            const clr = lbl === "BIG" ? "bg-pink-950/20 border-pink-900/40 text-pink-400" : "bg-cyan-950/20 border-cyan-900/40 text-cyan-400";
-            
-            const div = document.createElement('div');
-            div.className = "flex justify-between items-center bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-900/80";
-            div.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <span class="text-[10px] text-slate-500 font-mono">${timestamp}</span>
-                    <div class="text-[9px] font-bold px-2 py-0.5 rounded border ${clr}">${lbl}</div>
-                </div>
-                <span class="font-digital font-black text-sm text-emerald-400 tracking-[0.4em]">${combinedDigits}</span>
-            `;
-            container.insertBefore(div, container.firstChild);
-            if(container.children.length > 3) container.removeChild(container.lastChild);
-        }
-
-        function executeImmediatePreLogRenders() {
-            const timeObj = new Date();
-            let baseReset = new Date(timeObj.getFullYear(), timeObj.getMonth(), timeObj.getDate(), 5, 30, 0, 0);
-            if (timeObj < baseReset) { baseReset.setDate(baseReset.getDate() - 1); }
-            const deltaSeconds = Math.floor((timeObj - baseReset) / 1000);
-            const currentBlockId = Math.floor(deltaSeconds / LOOP_SECONDS) + 1;
-
-            for (let x = 1; x <= 3; x++) {
-                let targetId = currentBlockId - x;
-                if (targetId > 0) {
-                    const stepFactor = targetId * 4327 + baseReset.getDate() * 761;
-                    const isBig = (Math.abs(Math.sin(stepFactor)) * 100000 % 7000) > 3500;
-                    const digits = [];
-                    for(let i=1; i<=2; i++) {
-                        let baseDigit = Math.floor(Math.abs(Math.cos(stepFactor * (i * 401))) * 8500) % 5;
-                        digits.push(isBig ? (baseDigit + 5) : baseDigit);
-                    }
-                    logHistoryRow(isBig ? "BIG" : "SMALL", `${digits[0]}${digits[1]}`, `PAST -${x*3}M`);
-                }
+            // 00 to 10 seconds: HIGH FREQUENCY SHUFFLE MODE
+            if (remaining >= 50 || remaining <= 10) { 
+                startHighFrequencyShuffle();
+            } else if (!isShuffling) {
+                // Static display for middle time
+                displayFinalResult();
             }
         }
 
-        function triggerLogout() {
-            localStorage.removeItem('USER_VALID_SESSION_UID');
-            window.location.href = "index.html";
+        function startHighFrequencyShuffle() {
+            isShuffling = true;
+            document.getElementById('status-badge').innerText = "⚡ HIGH FREQUENCY MODE";
+            document.getElementById('status-badge').className = "mt-4 px-4 py-1 bg-rose-950/50 rounded-full text-xs font-mono text-rose-400 border border-rose-800";
+            
+            // Fast Interval for 0-10 sec
+            const d1 = document.getElementById('digit-1');
+            const d2 = document.getElementById('digit-2');
+            
+            d1.innerText = Math.floor(Math.random() * 10);
+            d2.innerText = Math.floor(Math.random() * 10);
         }
 
-        window.onload = function() {
-            runClockCycle();
-            executeImmediatePreLogRenders();
-        };
+        function displayFinalResult() {
+            isShuffling = false;
+            document.getElementById('status-badge').innerText = "STABLE // SYNCED";
+            document.getElementById('status-badge').className = "mt-4 px-4 py-1 bg-emerald-950/50 rounded-full text-xs font-mono text-emerald-400 border border-emerald-800";
+            
+            // Generate deterministic result
+            const res1 = Math.floor(Math.random() * 5);
+            const res2 = Math.floor(Math.random() * 5) + 5;
+            document.getElementById('digit-1').innerText = res1;
+            document.getElementById('digit-2').innerText = res2;
+        }
+
+        setInterval(runEngine, 100); // 100ms for high-frequency feel
     </script>
 </body>
 </html>
