@@ -3,74 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ HACKII 20K QUANTUM ENGINE</title>
+    <title>HACKII 20K QUANTUM ENGINE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #010206; color: white; font-family: 'Orbitron', sans-serif; overflow: hidden; }
-        .glass-box { background: rgba(5, 10, 25, 0.95); border: 1px solid #1e293b; box-shadow: 0 0 30px rgba(0, 255, 255, 0.1); }
-        .big-glow { color: #f472b6; text-shadow: 0 0 20px #f472b6; }
-        .small-glow { color: #22d3ee; text-shadow: 0 0 20px #22d3ee; }
-        .matrix-font { font-family: 'Courier New', Courier, monospace; }
+        body { background: #010206; color: white; font-family: sans-serif; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center h-screen p-4">
+<body class="flex flex-col items-center justify-center h-screen">
 
-    <div class="w-full max-w-sm glass-box p-8 rounded-3xl text-center border-t-4 border-cyan-500">
+    <div class="w-full max-w-sm p-8 bg-slate-900 rounded-3xl text-center border border-purple-500 shadow-2xl">
+        <h1 class="text-3xl font-black text-cyan-400 mb-6 uppercase tracking-wider">Hackii 20K</h1>
         
-        <h1 class="text-3xl font-black text-cyan-400 mb-2 tracking-widest">HACKII 20K</h1>
-        <div id="freq-status" class="text-[9px] text-slate-500 uppercase tracking-[0.4em] mb-8">20K QUANTUM NETWORK // ACTIVE</div>
-
-        <div id="signal" class="text-6xl font-black uppercase mb-8">---</div>
-
-        <div class="flex justify-center gap-6 mb-8">
-            <div id="d1" class="text-8xl font-black bg-black p-6 rounded-2xl border border-slate-800 shadow-inner">0</div>
-            <div id="d2" class="text-8xl font-black bg-black p-6 rounded-2xl border border-slate-800 shadow-inner">0</div>
+        <div id="countdown" class="text-5xl font-mono font-bold text-amber-400 mb-8">00:00</div>
+        
+        <div class="flex justify-center gap-8 mb-8">
+            <div id="digit-1" class="text-8xl font-black text-emerald-400">0</div>
+            <div id="digit-2" class="text-8xl font-black text-emerald-400">0</div>
         </div>
-
-        <div id="timer" class="text-xs font-mono text-cyan-500 border border-slate-800 py-2 px-4 rounded-full inline-block">
-            SYNCING: 00s
-        </div>
+        
+        <div id="bs-indicator" class="text-3xl font-extrabold mb-6 italic tracking-widest">-</div>
+        
+        <div id="status-badge" class="px-6 py-2 bg-slate-800 rounded-full text-xs uppercase font-bold tracking-widest">Waiting...</div>
     </div>
 
     <script>
-        // High Frequency Cryptographic RNG Engine
-        function getQuantumRNG() {
-            const arr = new Uint32Array(2);
-            window.crypto.getRandomValues(arr);
-            return [arr[0] % 10, arr[1] % 10];
-        }
-
-        function engineLoop() {
+        function updateEngine() {
             const sec = new Date().getSeconds();
-            const rem = 60 - sec;
-            document.getElementById('timer').innerText = "SYNCING: " + rem + "s";
+            const remaining = 60 - sec;
+            document.getElementById('countdown').innerText = "00:" + String(remaining).padStart(2, '0');
 
-            // 0-10 sec: High Frequency Shuffle (Real Entropy)
-            if (rem >= 50 || rem <= 10) {
-                const rand = getQuantumRNG();
-                document.getElementById('d1').innerText = rand[0];
-                document.getElementById('d2').innerText = rand[1];
-                document.getElementById('signal').innerText = "???";
-                document.getElementById('signal').className = "text-6xl font-black uppercase mb-8 text-slate-600";
-            } 
-            // 11-49 sec: Final Result Generation (Rule: 0-4 Small, 5-9 Big)
-            else {
-                const isBig = Math.random() > 0.5;
-                const d1 = isBig ? Math.floor(Math.random()*5)+5 : Math.floor(Math.random()*5);
-                const d2 = isBig ? Math.floor(Math.random()*5)+5 : Math.floor(Math.random()*5);
-                
-                document.getElementById('d1').innerText = d1;
-                document.getElementById('d2').innerText = d2;
-                
-                // Update Signal UI
-                const signal = document.getElementById('signal');
-                signal.innerText = isBig ? "BIG" : "SMALL";
-                signal.className = isBig ? "text-6xl font-black uppercase mb-8 big-glow" : "text-6xl font-black uppercase mb-8 small-glow";
+            // 0-10 seconds remaining: Shuffling animation
+            if (remaining >= 50 || remaining <= 10) {
+                document.getElementById('digit-1').innerText = Math.floor(Math.random() * 10);
+                document.getElementById('digit-2').innerText = Math.floor(Math.random() * 10);
+                document.getElementById('status-badge').innerText = "Shuffling...";
+                document.getElementById('status-badge').className = "px-6 py-2 bg-slate-800 rounded-full text-xs uppercase font-bold tracking-widest text-gray-400";
+                document.getElementById('bs-indicator').innerText = "-";
+                document.getElementById('bs-indicator').className = "text-3xl font-extrabold mb-6 italic tracking-widest text-white";
+            } else {
+                // Settle Result
+                if (document.getElementById('status-badge').innerText !== "Stable") {
+                    const isBig = Math.random() > 0.5;
+                    const r = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+                    
+                    const d1 = isBig ? r(5, 9) : r(0, 4);
+                    const d2 = isBig ? r(5, 9) : r(0, 4);
+                    
+                    document.getElementById('digit-1').innerText = d1;
+                    document.getElementById('digit-2').innerText = d2;
+                    document.getElementById('status-badge').innerText = "Stable";
+                    document.getElementById('status-badge').className = "px-6 py-2 bg-emerald-900/30 rounded-full text-xs uppercase font-bold tracking-widest text-emerald-400";
+                    
+                    // Logic for B/S
+                    const sum = d1 + d2;
+                    const result = sum >= 10 ? "BIG" : "SMALL";
+                    document.getElementById('bs-indicator').innerText = result;
+                    document.getElementById('bs-indicator').className = sum >= 10 
+                        ? "text-3xl font-extrabold mb-6 italic tracking-widest text-red-500" 
+                        : "text-3xl font-extrabold mb-6 italic tracking-widest text-blue-400";
+                }
             }
         }
-
-        // 80ms interval for ultra-fast frequency feel
-        setInterval(engineLoop, 80);
+        setInterval(updateEngine, 100);
     </script>
 </body>
 </html>
