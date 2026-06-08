@@ -3,179 +3,401 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>HACKII 20K QUANTUM ENGINE</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-body{
-    background:radial-gradient(circle at top,#10182d,#03040a);
-    min-height:100vh;
-    overflow:hidden;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-.glow{
-    box-shadow:
-    0 0 20px rgba(0,255,255,.4),
-    0 0 50px rgba(0,255,255,.15);
+body{
+background:
+radial-gradient(circle at top,#13203f,#03040a 60%);
+min-height:100vh;
+overflow:hidden;
+font-family:sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.bg-anim{
+position:absolute;
+width:100%;
+height:100%;
+overflow:hidden;
+z-index:0;
+}
+
+.ball{
+position:absolute;
+border-radius:50%;
+filter:blur(70px);
+opacity:.18;
+animation:float 12s infinite linear;
+}
+
+.ball:nth-child(1){
+width:250px;
+height:250px;
+background:#00ffff;
+left:5%;
+top:10%;
+}
+
+.ball:nth-child(2){
+width:300px;
+height:300px;
+background:#ff00ff;
+right:5%;
+bottom:10%;
+animation-duration:18s;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-40px)}
+100%{transform:translateY(0)}
 }
 
 .card{
-    background:rgba(255,255,255,.04);
-    backdrop-filter:blur(25px);
-    border:1px solid rgba(255,255,255,.08);
+position:relative;
+z-index:2;
+
+width:95%;
+max-width:450px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(25px);
+
+border:1px solid rgba(255,255,255,.1);
+
+border-radius:35px;
+
+padding:30px;
+
+box-shadow:
+0 0 25px rgba(0,255,255,.25),
+0 0 70px rgba(0,255,255,.12);
+}
+
+.title{
+font-size:38px;
+font-weight:900;
+color:#00ffff;
+text-shadow:0 0 20px #00ffff;
+}
+
+.sub{
+color:#94a3b8;
+font-size:12px;
+letter-spacing:3px;
+}
+
+.timer{
+font-size:70px;
+font-weight:900;
+color:#ffd700;
+text-shadow:0 0 25px #ffd700;
+}
+
+.digits{
+display:flex;
+justify-content:center;
+gap:35px;
+margin-top:10px;
 }
 
 .digit{
-    text-shadow:0 0 25px currentColor;
+font-size:95px;
+font-weight:900;
+color:#22c55e;
+text-shadow:
+0 0 15px currentColor,
+0 0 40px currentColor;
+}
+
+.bigsmall{
+font-size:40px;
+font-weight:900;
+margin-top:15px;
+}
+
+.status{
+margin-top:20px;
+padding:12px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+letter-spacing:2px;
+background:#111827;
+}
+
+.entropyWrap{
+margin-top:20px;
+}
+
+.bar{
+width:100%;
+height:12px;
+background:#0f172a;
+border-radius:999px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+width:96%;
+background:#00ffff;
+box-shadow:0 0 15px #00ffff;
+}
+
+.history{
+margin-top:20px;
+background:rgba(255,255,255,.04);
+padding:15px;
+border-radius:18px;
+font-size:13px;
+color:#cbd5e1;
+height:80px;
+overflow:auto;
+}
+
+.historyTitle{
+color:#00ffff;
+font-weight:700;
+margin-bottom:8px;
 }
 
 .processing{
-    animation:pulse 1s infinite;
+animation:pulse 1s infinite;
 }
 
 @keyframes pulse{
-    0%{opacity:.5}
-    50%{opacity:1}
-    100%{opacity:.5}
+0%{opacity:.5}
+50%{opacity:1}
+100%{opacity:.5}
 }
+
 </style>
 </head>
 
-<body class="flex items-center justify-center">
+<body>
 
-<div class="card glow w-[95%] max-w-md rounded-[35px] p-8 text-center">
+<div class="bg-anim">
+<div class="ball"></div>
+<div class="ball"></div>
+</div>
 
-    <h1 class="text-4xl font-black text-cyan-400 mb-2">
-        HACKII 20K
-    </h1>
+<div class="card">
 
-    <p class="text-gray-400 text-sm mb-6">
-        QUANTUM RNG ENGINE
-    </p>
+<div class="title text-center">
+HACKII 20K
+</div>
 
-    <div id="timer"
-    class="text-6xl font-black text-yellow-400 mb-8">
-        60
-    </div>
+<div class="sub text-center mb-6">
+QUANTUM RNG ENGINE
+</div>
 
-    <div class="flex justify-center gap-8 mb-6">
+<div id="timer" class="timer text-center">
+60
+</div>
 
-        <div id="d1"
-        class="digit text-8xl font-black text-green-400">
-            0
-        </div>
+<div class="digits">
+<div id="d1" class="digit">0</div>
+<div id="d2" class="digit">0</div>
+</div>
 
-        <div id="d2"
-        class="digit text-8xl font-black text-green-400">
-            0
-        </div>
+<div id="bs" class="bigsmall text-center text-white">
+WAIT
+</div>
 
-    </div>
+<div id="status" class="status text-center">
+INITIALIZING
+</div>
 
-    <div id="bs"
-    class="text-4xl font-black mb-6 text-white">
-        WAIT
-    </div>
+<div class="entropyWrap">
 
-    <div id="status"
-    class="bg-slate-800 rounded-full py-3 text-sm font-bold tracking-widest">
-        INITIALIZING
-    </div>
+<div class="flex justify-between text-xs text-cyan-300 mb-2">
+<span>ENTROPY LEVEL</span>
+<span id="entropyText">96%</span>
+</div>
+
+<div class="bar">
+<div id="entropyFill" class="fill"></div>
+</div>
+
+</div>
+
+<div class="history">
+
+<div class="historyTitle">
+LAST RESULTS
+</div>
+
+<div id="historyData">
+Waiting...
+</div>
+
+</div>
 
 </div>
 
 <script>
 
-const d1 = document.getElementById("d1");
-const d2 = document.getElementById("d2");
-const timer = document.getElementById("timer");
-const bs = document.getElementById("bs");
-const status = document.getElementById("status");
+const d1=document.getElementById("d1");
+const d2=document.getElementById("d2");
 
-let currentRound = -1;
+const timer=document.getElementById("timer");
+const bs=document.getElementById("bs");
+const status=document.getElementById("status");
 
-function secureRandom(min,max){
+const historyData=document.getElementById("historyData");
 
-    const arr = new Uint32Array(1);
-    crypto.getRandomValues(arr);
+const entropyFill=document.getElementById("entropyFill");
+const entropyText=document.getElementById("entropyText");
 
-    return min + (arr[0] % (max-min+1));
+let currentRound=-1;
+
+const history=[];
+
+function quantumRandom(min,max){
+
+const a=new Uint32Array(1);
+const b=new Uint32Array(1);
+
+crypto.getRandomValues(a);
+crypto.getRandomValues(b);
+
+const entropy=
+a[0]^
+b[0]^
+Date.now()^
+Math.floor(performance.now()*1000);
+
+return min+(Math.abs(entropy)%(max-min+1));
+
+}
+
+function updateEntropy(){
+
+const value=quantumRandom(90,100);
+
+entropyFill.style.width=value+"%";
+entropyText.innerText=value+"%";
+
+}
+
+function addHistory(v){
+
+history.unshift(v);
+
+if(history.length>10){
+history.pop();
+}
+
+historyData.innerHTML=history.join(" • ");
+
 }
 
 function generateResult(){
 
-    const big = secureRandom(0,1)===1;
+const big=quantumRandom(0,1)===1;
 
-    let n1,n2;
+let n1,n2;
 
-    if(big){
-        n1 = secureRandom(5,9);
-        n2 = secureRandom(5,9);
-    }else{
-        n1 = secureRandom(0,4);
-        n2 = secureRandom(0,4);
-    }
+if(big){
 
-    d1.innerText = n1;
-    d2.innerText = n2;
+n1=quantumRandom(5,9);
+n2=quantumRandom(5,9);
 
-    bs.innerText = big ? "BIG" : "SMALL";
+}else{
 
-    bs.className =
-    big
-    ? "text-4xl font-black mb-6 text-red-500"
-    : "text-4xl font-black mb-6 text-blue-400";
+n1=quantumRandom(0,4);
+n2=quantumRandom(0,4);
 
-    status.innerText = "RESULT LOCKED";
-    status.className =
-    "bg-green-900 rounded-full py-3 text-sm font-bold tracking-widest text-green-400";
+}
+
+d1.innerText=n1;
+d2.innerText=n2;
+
+bs.innerText=big?"BIG":"SMALL";
+
+bs.className=
+big
+? "bigsmall text-center text-red-500"
+: "bigsmall text-center text-blue-400";
+
+status.innerText="RESULT LOCKED";
+
+status.className=
+"status text-center text-green-400";
+
+addHistory(
+n1+""+n2+" - "+(big?"BIG":"SMALL")
+);
+
+updateEntropy();
+
 }
 
 function shuffleAnimation(){
 
-    d1.innerText = secureRandom(0,9);
-    d2.innerText = secureRandom(0,9);
+d1.innerText=quantumRandom(0,9);
+d2.innerText=quantumRandom(0,9);
 
-    bs.innerText = "PROCESSING";
+bs.innerText="PROCESSING";
 
-    status.innerText = "SEARCHING...";
-    status.className =
-    "processing bg-slate-800 rounded-full py-3 text-sm font-bold tracking-widest";
+status.innerText="ANALYZING ENTROPY";
+
+status.className=
+"status text-center processing";
+
 }
 
 function engine(){
 
-    const now = new Date();
+const now=new Date();
 
-    const seconds = now.getSeconds();
+const sec=now.getSeconds();
 
-    const remaining = 60 - seconds;
+const remain=60-sec;
 
-    timer.innerText = remaining;
+timer.innerText=remain;
 
-    const round = Math.floor(Date.now()/60000);
+const round=Math.floor(Date.now()/60000);
 
-    if(remaining <= 10){
+if(remain<=10){
 
-        shuffleAnimation();
+shuffleAnimation();
 
-        currentRound = round;
+currentRound=round;
 
-    }else{
+}else{
 
-        if(currentRound !== round){
+if(currentRound!==round){
 
-            generateResult();
+generateResult();
 
-            currentRound = round;
-        }
-    }
+currentRound=round;
+
 }
 
-engine();
+}
+
+}
+
+generateResult();
 
 setInterval(engine,100);
+setInterval(updateEntropy,1000);
 
 </script>
 
